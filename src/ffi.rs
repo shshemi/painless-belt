@@ -1,5 +1,5 @@
 use core::ffi::c_char;
-use std::ffi::CStr;
+use std::ffi::{CStr, CString};
 use std::ptr;
 
 use thiserror::Error;
@@ -15,8 +15,9 @@ pub enum Error {
 }
 
 pub fn sandbox_init(profile: &str, flags: u64) -> Result<(), Error> {
+    let profile_c = CString::new(profile).map_err(|_| Error::InvalidProfile)?;
     let mut errorbuf: *mut c_char = ptr::null_mut();
-    let rc = unsafe { c_api::sandbox_init(profile.as_ptr() as *const i8, flags, &mut errorbuf) };
+    let rc = unsafe { c_api::sandbox_init(profile_c.as_ptr(), flags, &mut errorbuf) };
     if rc == 0 {
         if !errorbuf.is_null() {
             unsafe { c_api::sandbox_free_error(errorbuf) };
