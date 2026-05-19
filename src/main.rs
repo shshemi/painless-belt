@@ -46,8 +46,10 @@ fn main() {
     }
 
     let (program, args) = cli.command.split_first().expect("command required");
-    // eprintln!("[..] about to exec {program:?} with {args:?}");
-    let err = Command::new(program).args(args).exec();
+    let err = Command::new(program)
+        .args(args)
+        .envs(std::env::vars_os())
+        .exec();
     eprintln!("[pb] exec {program:?} failed: {err}");
     std::process::exit(1);
 }
