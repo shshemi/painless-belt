@@ -33,9 +33,13 @@ fn main() {
         sb = sb.with_policy(ConnectToInternet);
     }
 
-    sb = sb.with_policy(ProtectDirectory::new(
-        home_dir().expect("No home_dir").join(".ssh"),
-    ));
+    let home = home_dir().expect("No home_dir");
+    sb = sb
+        .with_policy(ReadWriteDirectory::new(home.join(".claude")))
+        .with_policy(ReadWriteDirectory::new(home.join(".claude.json")))
+        .with_policy(ReadWriteDirectory::new(home.join(".config/claude")))
+        .with_policy(ReadWriteDirectory::new(home.join(".local/share/claude")))
+        .with_policy(ProtectDirectory::new(home.join(".ssh")));
 
     match sb.init() {
         Ok(()) => (),
