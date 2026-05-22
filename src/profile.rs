@@ -1,12 +1,12 @@
 use crate::traits::ToSbpl;
 
 #[derive(Debug)]
-pub struct Sandbox {
+pub struct Profile {
     def: Action,
     plc: Vec<Box<dyn ToSbpl>>,
 }
 
-impl Sandbox {
+impl Profile {
     pub fn allow_by_default() -> Self {
         Self {
             def: Action::Allow,
@@ -31,7 +31,7 @@ impl Sandbox {
     }
 }
 
-impl ToSbpl for Sandbox {
+impl ToSbpl for Profile {
     fn to_sbpl(&self) -> String {
         let mut out = format!("(version 1)\n({} default)", self.def.to_sbpl());
         for r in &self.plc {

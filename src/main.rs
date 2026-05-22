@@ -8,11 +8,11 @@ use painless_belt::policy::connect_to_internet::ConnectToInternet;
 use painless_belt::policy::execute_system_binaries::ExecuteSystemBinaries;
 use painless_belt::policy::protect_dir::ProtectDirectory;
 use painless_belt::policy::read_write_dir::ReadWriteDirectory;
-use painless_belt::sandbox::Sandbox;
+use painless_belt::profile::Profile;
 
 fn main() {
     let cli = Cli::parse();
-    let mut sb = Sandbox::deny_by_default();
+    let mut sb = Profile::deny_by_default();
 
     if !cli.no_cwd {
         let cwd = std::env::current_dir().expect("current_dir");
