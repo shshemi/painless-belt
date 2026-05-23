@@ -1,0 +1,24 @@
+use super::{Host, NetworkFilter, Port, Proto};
+use crate::sandbox::Operation;
+use crate::sandbox::operations::Filter;
+
+#[derive(Debug)]
+pub struct NetworkBind {
+    filter: NetworkFilter,
+}
+
+impl NetworkBind {
+    pub fn local(proto: Proto, host: Host, port: Port) -> Self {
+        Self { filter: NetworkFilter::Local { proto, host, port } }
+    }
+
+    pub fn remote(proto: Proto, host: Host, port: Port) -> Self {
+        Self { filter: NetworkFilter::Remote { proto, host, port } }
+    }
+}
+
+impl Operation for NetworkBind {
+    fn render(&self) -> String {
+        format!("network-bind {}", self.filter.render())
+    }
+}
