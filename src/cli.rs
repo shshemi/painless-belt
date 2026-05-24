@@ -1,4 +1,4 @@
-use std::ffi::OsString;
+use std::{ffi::OsString, sync::OnceLock};
 
 use clap::Parser;
 
@@ -27,4 +27,9 @@ pub struct Cli {
     /// Command and args to run inside the sandbox (after `--`).
     #[arg(last = true, required = true)]
     pub command: Vec<OsString>,
+}
+
+pub fn cli() -> &'static Cli {
+    static OL: OnceLock<Cli> = OnceLock::<Cli>::new();
+    OL.get_or_init(Cli::parse)
 }
