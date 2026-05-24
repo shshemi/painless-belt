@@ -4,7 +4,6 @@ use regex::Regex;
 
 use super::FileFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct FileLink {
@@ -39,6 +38,6 @@ impl FileLink {
 
 impl Operation for FileLink {
     fn render(&self) -> String {
-        format!("file-link {}", self.filter.render())
+        format!("file-link {}", self.filter.to_sbdl())
     }
 }

@@ -2,7 +2,6 @@ use regex::Regex;
 
 use super::IpcPosixFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct IpcPosixSemOpen {
@@ -21,6 +20,6 @@ impl IpcPosixSemOpen {
 
 impl Operation for IpcPosixSemOpen {
     fn render(&self) -> String {
-        format!("ipc-posix-sem-open {}", self.filter.render())
+        format!("ipc-posix-sem-open {}", self.filter.to_sbdl())
     }
 }

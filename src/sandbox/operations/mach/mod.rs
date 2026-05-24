@@ -2,8 +2,6 @@ use regex::Regex;
 
 use crate::misc::ext::str_ext::StrExt;
 
-use super::Filter;
-
 pub mod mach_bootstrap;
 pub mod mach_cross_domain_lookup;
 pub mod mach_derive_port;
@@ -24,8 +22,8 @@ enum MachFilter {
     LocalNameRegex(Regex),
 }
 
-impl Filter for MachFilter {
-    fn render(&self) -> String {
+impl MachFilter {
+    fn to_sbdl(&self) -> String {
         match self {
             MachFilter::GlobalName(n) => format!("(global-name \"{}\")", n.escape()),
             MachFilter::LocalName(n) => format!("(local-name \"{}\")", n.escape()),

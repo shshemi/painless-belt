@@ -2,7 +2,6 @@ use regex::Regex;
 
 use super::MachFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct MachRegister {
@@ -37,6 +36,6 @@ impl MachRegister {
 
 impl Operation for MachRegister {
     fn render(&self) -> String {
-        format!("mach-register {}", self.filter.render())
+        format!("mach-register {}", self.filter.to_sbdl())
     }
 }

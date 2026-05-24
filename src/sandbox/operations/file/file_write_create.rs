@@ -4,7 +4,6 @@ use regex::Regex;
 
 use super::FileFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct FileWriteCreate {
@@ -39,6 +38,6 @@ impl FileWriteCreate {
 
 impl Operation for FileWriteCreate {
     fn render(&self) -> String {
-        format!("file-write-create {}", self.filter.render())
+        format!("file-write-create {}", self.filter.to_sbdl())
     }
 }

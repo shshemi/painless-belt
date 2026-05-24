@@ -2,7 +2,6 @@ use regex::Regex;
 
 use super::MachFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct MachLookup {
@@ -37,6 +36,6 @@ impl MachLookup {
 
 impl Operation for MachLookup {
     fn render(&self) -> String {
-        format!("mach-lookup {}", self.filter.render())
+        format!("mach-lookup {}", self.filter.to_sbdl())
     }
 }

@@ -4,8 +4,6 @@ use regex::Regex;
 
 use crate::misc::ext::str_ext::StrExt;
 
-use super::Filter;
-
 pub mod file_chroot;
 pub mod file_fsctl;
 pub mod file_ioctl;
@@ -40,8 +38,8 @@ enum FileFilter {
     Regex(Regex),
 }
 
-impl Filter for FileFilter {
-    fn render(&self) -> String {
+impl FileFilter {
+    fn to_sbdl(&self) -> String {
         match self {
             FileFilter::Literal(p) => {
                 format!("(literal \"{}\")", p.to_string_lossy().escape())

@@ -1,6 +1,5 @@
 use super::{Host, NetworkFilter, Port, Proto};
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct NetworkOutbound {
@@ -19,6 +18,6 @@ impl NetworkOutbound {
 
 impl Operation for NetworkOutbound {
     fn render(&self) -> String {
-        format!("network-outbound {}", self.filter.render())
+        format!("network-outbound {}", self.filter.to_sbdl())
     }
 }

@@ -2,7 +2,6 @@ use regex::Regex;
 
 use super::IpcPosixFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct IpcPosixSemWait {
@@ -21,6 +20,6 @@ impl IpcPosixSemWait {
 
 impl Operation for IpcPosixSemWait {
     fn render(&self) -> String {
-        format!("ipc-posix-sem-wait {}", self.filter.render())
+        format!("ipc-posix-sem-wait {}", self.filter.to_sbdl())
     }
 }

@@ -2,8 +2,6 @@ use regex::Regex;
 
 use crate::misc::ext::str_ext::StrExt;
 
-use super::Filter;
-
 pub mod ipc_posix_sem;
 pub mod ipc_posix_sem_create;
 pub mod ipc_posix_sem_open;
@@ -25,8 +23,8 @@ enum IpcPosixFilter {
     Regex(Regex),
 }
 
-impl Filter for IpcPosixFilter {
-    fn render(&self) -> String {
+impl IpcPosixFilter {
+    fn to_sbdl(&self) -> String {
         match self {
             IpcPosixFilter::Name(n) => format!("(ipc-posix-name \"{}\")", n.escape()),
             IpcPosixFilter::Regex(r) => {

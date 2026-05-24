@@ -2,7 +2,6 @@ use regex::Regex;
 
 use super::SysctlFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct SysctlRead {
@@ -25,6 +24,6 @@ impl SysctlRead {
 
 impl Operation for SysctlRead {
     fn render(&self) -> String {
-        format!("sysctl-read {}", self.filter.render())
+        format!("sysctl-read {}", self.filter.to_sbdl())
     }
 }

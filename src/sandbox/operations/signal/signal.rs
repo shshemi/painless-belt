@@ -1,6 +1,5 @@
 use super::SignalFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct Signal {
@@ -23,6 +22,6 @@ impl Signal {
 
 impl Operation for Signal {
     fn render(&self) -> String {
-        format!("signal {}", self.filter.render())
+        format!("signal {}", self.filter.to_sbdl())
     }
 }

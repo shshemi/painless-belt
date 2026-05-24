@@ -4,7 +4,6 @@ use regex::Regex;
 
 use super::FileFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct FileIssueExtension {
@@ -39,6 +38,6 @@ impl FileIssueExtension {
 
 impl Operation for FileIssueExtension {
     fn render(&self) -> String {
-        format!("file-issue-extension {}", self.filter.render())
+        format!("file-issue-extension {}", self.filter.to_sbdl())
     }
 }

@@ -4,7 +4,6 @@ use regex::Regex;
 
 use super::FileFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct FileFsctl {
@@ -39,6 +38,6 @@ impl FileFsctl {
 
 impl Operation for FileFsctl {
     fn render(&self) -> String {
-        format!("file-fsctl {}", self.filter.render())
+        format!("file-fsctl {}", self.filter.to_sbdl())
     }
 }

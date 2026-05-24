@@ -1,5 +1,3 @@
-use super::Filter;
-
 pub mod network;
 pub mod network_bind;
 pub mod network_inbound;
@@ -68,8 +66,8 @@ pub(super) enum NetworkFilter {
     },
 }
 
-impl Filter for NetworkFilter {
-    fn render(&self) -> String {
+impl NetworkFilter {
+    fn to_sbdl(&self) -> String {
         match self {
             NetworkFilter::Local { proto, host, port } => format!(
                 "(local {} \"{}:{}\")",

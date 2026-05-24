@@ -4,7 +4,6 @@ use regex::Regex;
 
 use super::FileFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct FileSearch {
@@ -39,6 +38,6 @@ impl FileSearch {
 
 impl Operation for FileSearch {
     fn render(&self) -> String {
-        format!("file-search {}", self.filter.render())
+        format!("file-search {}", self.filter.to_sbdl())
     }
 }

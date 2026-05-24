@@ -2,7 +2,6 @@ use regex::Regex;
 
 use super::IpcPosixFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct IpcPosixShmWrite {
@@ -21,6 +20,6 @@ impl IpcPosixShmWrite {
 
 impl Operation for IpcPosixShmWrite {
     fn render(&self) -> String {
-        format!("ipc-posix-shm-write* {}", self.filter.render())
+        format!("ipc-posix-shm-write* {}", self.filter.to_sbdl())
     }
 }

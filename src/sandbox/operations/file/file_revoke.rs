@@ -4,7 +4,6 @@ use regex::Regex;
 
 use super::FileFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct FileRevoke {
@@ -39,6 +38,6 @@ impl FileRevoke {
 
 impl Operation for FileRevoke {
     fn render(&self) -> String {
-        format!("file-revoke {}", self.filter.render())
+        format!("file-revoke {}", self.filter.to_sbdl())
     }
 }

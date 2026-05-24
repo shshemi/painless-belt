@@ -4,7 +4,6 @@ use regex::Regex;
 
 use super::FileFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct FileMapExecutable {
@@ -39,6 +38,6 @@ impl FileMapExecutable {
 
 impl Operation for FileMapExecutable {
     fn render(&self) -> String {
-        format!("file-map-executable {}", self.filter.render())
+        format!("file-map-executable {}", self.filter.to_sbdl())
     }
 }

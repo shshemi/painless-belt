@@ -4,7 +4,6 @@ use regex::Regex;
 
 use super::FileFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct FileReadMetadata {
@@ -39,6 +38,6 @@ impl FileReadMetadata {
 
 impl Operation for FileReadMetadata {
     fn render(&self) -> String {
-        format!("file-read-metadata {}", self.filter.render())
+        format!("file-read-metadata {}", self.filter.to_sbdl())
     }
 }

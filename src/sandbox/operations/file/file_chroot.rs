@@ -4,7 +4,6 @@ use regex::Regex;
 
 use super::FileFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct FileChroot {
@@ -39,6 +38,6 @@ impl FileChroot {
 
 impl Operation for FileChroot {
     fn render(&self) -> String {
-        format!("file-chroot {}", self.filter.render())
+        format!("file-chroot {}", self.filter.to_sbdl())
     }
 }

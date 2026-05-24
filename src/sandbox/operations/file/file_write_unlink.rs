@@ -4,7 +4,6 @@ use regex::Regex;
 
 use super::FileFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct FileWriteUnlink {
@@ -39,6 +38,6 @@ impl FileWriteUnlink {
 
 impl Operation for FileWriteUnlink {
     fn render(&self) -> String {
-        format!("file-write-unlink {}", self.filter.render())
+        format!("file-write-unlink {}", self.filter.to_sbdl())
     }
 }

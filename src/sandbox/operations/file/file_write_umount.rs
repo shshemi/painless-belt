@@ -4,7 +4,6 @@ use regex::Regex;
 
 use super::FileFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct FileWriteUmount {
@@ -39,6 +38,6 @@ impl FileWriteUmount {
 
 impl Operation for FileWriteUmount {
     fn render(&self) -> String {
-        format!("file-write-umount {}", self.filter.render())
+        format!("file-write-umount {}", self.filter.to_sbdl())
     }
 }

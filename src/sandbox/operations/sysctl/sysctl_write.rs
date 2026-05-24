@@ -2,7 +2,6 @@ use regex::Regex;
 
 use super::SysctlFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct SysctlWrite {
@@ -25,6 +24,6 @@ impl SysctlWrite {
 
 impl Operation for SysctlWrite {
     fn render(&self) -> String {
-        format!("sysctl-write {}", self.filter.render())
+        format!("sysctl-write {}", self.filter.to_sbdl())
     }
 }

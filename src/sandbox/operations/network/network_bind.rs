@@ -1,6 +1,5 @@
 use super::{Host, NetworkFilter, Port, Proto};
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct NetworkBind {
@@ -19,6 +18,6 @@ impl NetworkBind {
 
 impl Operation for NetworkBind {
     fn render(&self) -> String {
-        format!("network-bind {}", self.filter.render())
+        format!("network-bind {}", self.filter.to_sbdl())
     }
 }

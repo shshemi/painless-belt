@@ -4,7 +4,6 @@ use regex::Regex;
 
 use super::FileFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct FileWriteXattr {
@@ -39,6 +38,6 @@ impl FileWriteXattr {
 
 impl Operation for FileWriteXattr {
     fn render(&self) -> String {
-        format!("file-write-xattr {}", self.filter.render())
+        format!("file-write-xattr {}", self.filter.to_sbdl())
     }
 }

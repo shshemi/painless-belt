@@ -4,7 +4,6 @@ use regex::Regex;
 
 use super::FileFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct FileWriteTimes {
@@ -39,6 +38,6 @@ impl FileWriteTimes {
 
 impl Operation for FileWriteTimes {
     fn render(&self) -> String {
-        format!("file-write-times {}", self.filter.render())
+        format!("file-write-times {}", self.filter.to_sbdl())
     }
 }

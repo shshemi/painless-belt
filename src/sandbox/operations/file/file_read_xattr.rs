@@ -4,7 +4,6 @@ use regex::Regex;
 
 use super::FileFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct FileReadXattr {
@@ -39,6 +38,6 @@ impl FileReadXattr {
 
 impl Operation for FileReadXattr {
     fn render(&self) -> String {
-        format!("file-read-xattr {}", self.filter.render())
+        format!("file-read-xattr {}", self.filter.to_sbdl())
     }
 }

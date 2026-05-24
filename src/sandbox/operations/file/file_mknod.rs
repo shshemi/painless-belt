@@ -4,7 +4,6 @@ use regex::Regex;
 
 use super::FileFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct FileMknod {
@@ -39,6 +38,6 @@ impl FileMknod {
 
 impl Operation for FileMknod {
     fn render(&self) -> String {
-        format!("file-mknod {}", self.filter.render())
+        format!("file-mknod {}", self.filter.to_sbdl())
     }
 }

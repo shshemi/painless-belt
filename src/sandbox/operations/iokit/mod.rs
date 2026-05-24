@@ -2,8 +2,6 @@ use regex::Regex;
 
 use crate::misc::ext::str_ext::StrExt;
 
-use super::Filter;
-
 pub mod iokit_open;
 pub mod iokit_set_properties;
 
@@ -15,8 +13,8 @@ enum IokitFilter {
     PropertyRegex(Regex),
 }
 
-impl Filter for IokitFilter {
-    fn render(&self) -> String {
+impl IokitFilter {
+    fn to_sbdl(&self) -> String {
         match self {
             IokitFilter::UserClientClass(s) => {
                 format!("(iokit-user-client-class \"{}\")", s.escape())

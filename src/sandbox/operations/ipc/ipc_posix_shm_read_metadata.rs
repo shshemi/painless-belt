@@ -2,7 +2,6 @@ use regex::Regex;
 
 use super::IpcPosixFilter;
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct IpcPosixShmReadMetadata {
@@ -21,6 +20,6 @@ impl IpcPosixShmReadMetadata {
 
 impl Operation for IpcPosixShmReadMetadata {
     fn render(&self) -> String {
-        format!("ipc-posix-shm-read-metadata {}", self.filter.render())
+        format!("ipc-posix-shm-read-metadata {}", self.filter.to_sbdl())
     }
 }

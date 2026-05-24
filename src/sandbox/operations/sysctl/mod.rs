@@ -2,8 +2,6 @@ use regex::Regex;
 
 use crate::misc::ext::str_ext::StrExt;
 
-use super::Filter;
-
 pub mod sysctl_read;
 pub mod sysctl_write;
 
@@ -13,8 +11,8 @@ enum SysctlFilter {
     Regex(Regex),
 }
 
-impl Filter for SysctlFilter {
-    fn render(&self) -> String {
+impl SysctlFilter {
+    fn to_sbdl(&self) -> String {
         match self {
             SysctlFilter::Name(n) => format!("(sysctl-name \"{}\")", n.escape()),
             SysctlFilter::Regex(r) => {

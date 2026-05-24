@@ -1,6 +1,5 @@
 use super::{Host, NetworkFilter, Port, Proto};
 use crate::sandbox::Operation;
-use crate::sandbox::operations::Filter;
 
 #[derive(Debug)]
 pub struct Network {
@@ -19,6 +18,6 @@ impl Network {
 
 impl Operation for Network {
     fn render(&self) -> String {
-        format!("network* {}", self.filter.render())
+        format!("network* {}", self.filter.to_sbdl())
     }
 }
