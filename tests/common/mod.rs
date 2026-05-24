@@ -16,7 +16,7 @@ pub fn fork_run<F: FnOnce() -> i32>(body: F) -> i32 {
 }
 
 pub fn assert_profile_initializes(profile: Profile) {
-    let rendered = profile.render();
+    let rendered = profile.as_ref().to_owned();
     let code = fork_run(move || match profile.init() {
         Ok(()) => EXIT_OK,
         Err(e) => {
