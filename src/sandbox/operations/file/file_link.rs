@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use regex::Regex;
 
 use super::FileFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct FileLink {
@@ -36,8 +36,8 @@ impl FileLink {
     }
 }
 
-impl Operation for FileLink {
-    fn render(&self) -> String {
+impl ToSbdl for FileLink {
+    fn to_sbdl(&self) -> String {
         format!("file-link {}", self.filter.to_sbdl())
     }
 }

@@ -1,10 +1,10 @@
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct MachHostSpecialPortSet;
 
-impl Operation for MachHostSpecialPortSet {
-    fn render(&self) -> String {
+impl ToSbdl for MachHostSpecialPortSet {
+    fn to_sbdl(&self) -> String {
         "mach-host-special-port-set".to_string()
     }
 }

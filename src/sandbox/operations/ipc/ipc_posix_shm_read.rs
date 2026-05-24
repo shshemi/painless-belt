@@ -1,7 +1,7 @@
 use regex::Regex;
 
 use super::IpcPosixFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct IpcPosixShmRead {
@@ -10,16 +10,20 @@ pub struct IpcPosixShmRead {
 
 impl IpcPosixShmRead {
     pub fn name(name: impl Into<String>) -> Self {
-        Self { filter: IpcPosixFilter::Name(name.into()) }
+        Self {
+            filter: IpcPosixFilter::Name(name.into()),
+        }
     }
 
     pub fn regex(regex: Regex) -> Self {
-        Self { filter: IpcPosixFilter::Regex(regex) }
+        Self {
+            filter: IpcPosixFilter::Regex(regex),
+        }
     }
 }
 
-impl Operation for IpcPosixShmRead {
-    fn render(&self) -> String {
+impl ToSbdl for IpcPosixShmRead {
+    fn to_sbdl(&self) -> String {
         format!("ipc-posix-shm-read* {}", self.filter.to_sbdl())
     }
 }

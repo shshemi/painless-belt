@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use regex::Regex;
 
 use super::FileFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct FileWriteOwner {
@@ -36,8 +36,8 @@ impl FileWriteOwner {
     }
 }
 
-impl Operation for FileWriteOwner {
-    fn render(&self) -> String {
+impl ToSbdl for FileWriteOwner {
+    fn to_sbdl(&self) -> String {
         format!("file-write-owner {}", self.filter.to_sbdl())
     }
 }

@@ -1,10 +1,10 @@
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct MachIssueExtension;
 
-impl Operation for MachIssueExtension {
-    fn render(&self) -> String {
+impl ToSbdl for MachIssueExtension {
+    fn to_sbdl(&self) -> String {
         "mach-issue-extension".to_string()
     }
 }

@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use regex::Regex;
 
 use super::FileFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct FileIssueExtension {
@@ -36,8 +36,8 @@ impl FileIssueExtension {
     }
 }
 
-impl Operation for FileIssueExtension {
-    fn render(&self) -> String {
+impl ToSbdl for FileIssueExtension {
+    fn to_sbdl(&self) -> String {
         format!("file-issue-extension {}", self.filter.to_sbdl())
     }
 }

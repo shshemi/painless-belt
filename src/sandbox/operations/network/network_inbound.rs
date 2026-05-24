@@ -1,5 +1,5 @@
 use super::{Host, NetworkFilter, Port, Proto};
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct NetworkInbound {
@@ -8,16 +8,20 @@ pub struct NetworkInbound {
 
 impl NetworkInbound {
     pub fn local(proto: Proto, host: Host, port: Port) -> Self {
-        Self { filter: NetworkFilter::Local { proto, host, port } }
+        Self {
+            filter: NetworkFilter::Local { proto, host, port },
+        }
     }
 
     pub fn remote(proto: Proto, host: Host, port: Port) -> Self {
-        Self { filter: NetworkFilter::Remote { proto, host, port } }
+        Self {
+            filter: NetworkFilter::Remote { proto, host, port },
+        }
     }
 }
 
-impl Operation for NetworkInbound {
-    fn render(&self) -> String {
+impl ToSbdl for NetworkInbound {
+    fn to_sbdl(&self) -> String {
         format!("network-inbound {}", self.filter.to_sbdl())
     }
 }

@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use regex::Regex;
 
 use super::FileFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct FileMknod {
@@ -36,8 +36,8 @@ impl FileMknod {
     }
 }
 
-impl Operation for FileMknod {
-    fn render(&self) -> String {
+impl ToSbdl for FileMknod {
+    fn to_sbdl(&self) -> String {
         format!("file-mknod {}", self.filter.to_sbdl())
     }
 }

@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use regex::Regex;
 
 use super::FileFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct FileWriteTimes {
@@ -36,8 +36,8 @@ impl FileWriteTimes {
     }
 }
 
-impl Operation for FileWriteTimes {
-    fn render(&self) -> String {
+impl ToSbdl for FileWriteTimes {
+    fn to_sbdl(&self) -> String {
         format!("file-write-times {}", self.filter.to_sbdl())
     }
 }

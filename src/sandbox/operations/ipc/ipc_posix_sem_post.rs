@@ -1,7 +1,7 @@
 use regex::Regex;
 
 use super::IpcPosixFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct IpcPosixSemPost {
@@ -10,16 +10,20 @@ pub struct IpcPosixSemPost {
 
 impl IpcPosixSemPost {
     pub fn name(name: impl Into<String>) -> Self {
-        Self { filter: IpcPosixFilter::Name(name.into()) }
+        Self {
+            filter: IpcPosixFilter::Name(name.into()),
+        }
     }
 
     pub fn regex(regex: Regex) -> Self {
-        Self { filter: IpcPosixFilter::Regex(regex) }
+        Self {
+            filter: IpcPosixFilter::Regex(regex),
+        }
     }
 }
 
-impl Operation for IpcPosixSemPost {
-    fn render(&self) -> String {
+impl ToSbdl for IpcPosixSemPost {
+    fn to_sbdl(&self) -> String {
         format!("ipc-posix-sem-post {}", self.filter.to_sbdl())
     }
 }

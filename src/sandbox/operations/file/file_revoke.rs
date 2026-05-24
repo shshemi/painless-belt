@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use regex::Regex;
 
 use super::FileFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct FileRevoke {
@@ -36,8 +36,8 @@ impl FileRevoke {
     }
 }
 
-impl Operation for FileRevoke {
-    fn render(&self) -> String {
+impl ToSbdl for FileRevoke {
+    fn to_sbdl(&self) -> String {
         format!("file-revoke {}", self.filter.to_sbdl())
     }
 }

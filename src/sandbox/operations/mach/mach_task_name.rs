@@ -1,10 +1,10 @@
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct MachTaskName;
 
-impl Operation for MachTaskName {
-    fn render(&self) -> String {
+impl ToSbdl for MachTaskName {
+    fn to_sbdl(&self) -> String {
         "mach-task-name".to_string()
     }
 }

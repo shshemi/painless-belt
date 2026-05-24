@@ -1,7 +1,7 @@
 use regex::Regex;
 
 use super::IokitFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct IokitOpen {
@@ -34,8 +34,8 @@ impl IokitOpen {
     }
 }
 
-impl Operation for IokitOpen {
-    fn render(&self) -> String {
+impl ToSbdl for IokitOpen {
+    fn to_sbdl(&self) -> String {
         format!("iokit-open {}", self.filter.to_sbdl())
     }
 }

@@ -1,7 +1,7 @@
 use regex::Regex;
 
 use super::IokitFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct IokitSetProperties {
@@ -34,8 +34,8 @@ impl IokitSetProperties {
     }
 }
 
-impl Operation for IokitSetProperties {
-    fn render(&self) -> String {
+impl ToSbdl for IokitSetProperties {
+    fn to_sbdl(&self) -> String {
         format!("iokit-set-properties {}", self.filter.to_sbdl())
     }
 }

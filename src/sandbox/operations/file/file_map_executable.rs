@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use regex::Regex;
 
 use super::FileFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct FileMapExecutable {
@@ -36,8 +36,8 @@ impl FileMapExecutable {
     }
 }
 
-impl Operation for FileMapExecutable {
-    fn render(&self) -> String {
+impl ToSbdl for FileMapExecutable {
+    fn to_sbdl(&self) -> String {
         format!("file-map-executable {}", self.filter.to_sbdl())
     }
 }

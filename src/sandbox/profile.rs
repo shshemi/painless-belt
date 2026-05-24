@@ -1,4 +1,4 @@
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct Profile {
@@ -18,13 +18,13 @@ impl Profile {
         }
     }
 
-    pub fn allow(mut self, op: impl Operation + 'static) -> Self {
-        self.prf.push_str(&format!("\n(allow {})", op.render()));
+    pub fn allow(mut self, op: impl ToSbdl + 'static) -> Self {
+        self.prf.push_str(&format!("\n(allow {})", op.to_sbdl()));
         self
     }
 
-    pub fn deny(mut self, op: impl Operation + 'static) -> Self {
-        self.prf.push_str(&format!("\n(deny {})", op.render()));
+    pub fn deny(mut self, op: impl ToSbdl + 'static) -> Self {
+        self.prf.push_str(&format!("\n(deny {})", op.to_sbdl()));
         self
     }
 

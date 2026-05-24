@@ -1,10 +1,10 @@
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct MachBootstrap;
 
-impl Operation for MachBootstrap {
-    fn render(&self) -> String {
+impl ToSbdl for MachBootstrap {
+    fn to_sbdl(&self) -> String {
         "mach-bootstrap".to_string()
     }
 }

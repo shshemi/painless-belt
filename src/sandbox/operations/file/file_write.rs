@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use regex::Regex;
 
 use super::FileFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct FileWrite {
@@ -36,8 +36,8 @@ impl FileWrite {
     }
 }
 
-impl Operation for FileWrite {
-    fn render(&self) -> String {
+impl ToSbdl for FileWrite {
+    fn to_sbdl(&self) -> String {
         format!("file-write* {}", self.filter.to_sbdl())
     }
 }

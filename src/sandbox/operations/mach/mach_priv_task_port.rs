@@ -1,10 +1,10 @@
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct MachPrivTaskPort;
 
-impl Operation for MachPrivTaskPort {
-    fn render(&self) -> String {
+impl ToSbdl for MachPrivTaskPort {
+    fn to_sbdl(&self) -> String {
         "mach-priv-task-port".to_string()
     }
 }

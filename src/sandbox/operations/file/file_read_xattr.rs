@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use regex::Regex;
 
 use super::FileFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct FileReadXattr {
@@ -36,8 +36,8 @@ impl FileReadXattr {
     }
 }
 
-impl Operation for FileReadXattr {
-    fn render(&self) -> String {
+impl ToSbdl for FileReadXattr {
+    fn to_sbdl(&self) -> String {
         format!("file-read-xattr {}", self.filter.to_sbdl())
     }
 }

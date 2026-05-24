@@ -1,7 +1,7 @@
 use regex::Regex;
 
 use super::IpcPosixFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct IpcPosixSemUnlink {
@@ -10,16 +10,20 @@ pub struct IpcPosixSemUnlink {
 
 impl IpcPosixSemUnlink {
     pub fn name(name: impl Into<String>) -> Self {
-        Self { filter: IpcPosixFilter::Name(name.into()) }
+        Self {
+            filter: IpcPosixFilter::Name(name.into()),
+        }
     }
 
     pub fn regex(regex: Regex) -> Self {
-        Self { filter: IpcPosixFilter::Regex(regex) }
+        Self {
+            filter: IpcPosixFilter::Regex(regex),
+        }
     }
 }
 
-impl Operation for IpcPosixSemUnlink {
-    fn render(&self) -> String {
+impl ToSbdl for IpcPosixSemUnlink {
+    fn to_sbdl(&self) -> String {
         format!("ipc-posix-sem-unlink {}", self.filter.to_sbdl())
     }
 }

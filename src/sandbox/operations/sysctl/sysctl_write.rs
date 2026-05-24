@@ -1,7 +1,7 @@
 use regex::Regex;
 
 use super::SysctlFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct SysctlWrite {
@@ -22,8 +22,8 @@ impl SysctlWrite {
     }
 }
 
-impl Operation for SysctlWrite {
-    fn render(&self) -> String {
+impl ToSbdl for SysctlWrite {
+    fn to_sbdl(&self) -> String {
         format!("sysctl-write {}", self.filter.to_sbdl())
     }
 }

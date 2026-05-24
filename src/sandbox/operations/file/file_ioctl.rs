@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use regex::Regex;
 
 use super::FileFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct FileIoctl {
@@ -36,8 +36,8 @@ impl FileIoctl {
     }
 }
 
-impl Operation for FileIoctl {
-    fn render(&self) -> String {
+impl ToSbdl for FileIoctl {
+    fn to_sbdl(&self) -> String {
         format!("file-ioctl {}", self.filter.to_sbdl())
     }
 }

@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use regex::Regex;
 
 use super::FileFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct FileWriteUnlink {
@@ -36,8 +36,8 @@ impl FileWriteUnlink {
     }
 }
 
-impl Operation for FileWriteUnlink {
-    fn render(&self) -> String {
+impl ToSbdl for FileWriteUnlink {
+    fn to_sbdl(&self) -> String {
         format!("file-write-unlink {}", self.filter.to_sbdl())
     }
 }

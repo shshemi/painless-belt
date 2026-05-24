@@ -1,7 +1,7 @@
 use regex::Regex;
 
 use super::MachFilter;
-use crate::sandbox::Operation;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct MachLookup {
@@ -34,8 +34,8 @@ impl MachLookup {
     }
 }
 
-impl Operation for MachLookup {
-    fn render(&self) -> String {
+impl ToSbdl for MachLookup {
+    fn to_sbdl(&self) -> String {
         format!("mach-lookup {}", self.filter.to_sbdl())
     }
 }
