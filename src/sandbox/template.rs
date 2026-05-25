@@ -5,17 +5,17 @@ use std::process::Command;
 
 use minijinja::{Environment, Value};
 
+use crate::AppResult;
 use crate::cli::cli;
 
-pub fn render(template: &str) -> Result<String, minijinja::Error> {
+pub fn render(template: &str) -> AppResult<String> {
     let cli = cli();
-    let command = cli
-        .command
+    let cmdline: &[std::ffi::OsString] = cli.run_args().map(|r| r.command.as_slice()).unwrap_or(&[]);
+    let command = cmdline
         .first()
         .map(|s| s.to_string_lossy().into_owned())
         .unwrap_or_default();
-    let args: Vec<String> = cli
-        .command
+    let args: Vec<String> = cmdline
         .iter()
         .skip(1)
         .map(|s| s.to_string_lossy().into_owned())
@@ -64,7 +64,7 @@ pub fn render(template: &str) -> Result<String, minijinja::Error> {
     for (k, v) in env::vars() {
         ctx.insert(format!("env_{k}"), Value::from(v));
     }
-    Environment::new().render_str(template, ctx)
+    Ok(Environment::new().render_str(template, ctx)?)
 }
 
 fn path_to_string<P: AsRef<Path>>(p: P) -> String {
