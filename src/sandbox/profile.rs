@@ -48,7 +48,8 @@ impl AsRef<str> for Profile {
 impl Default for Profile {
     fn default() -> Self {
         Self {
-            inner: render(include_str!("../../default.pb")).expect("Invalid default profile"),
+            inner: render(include_str!("../../profiles/default.pb"))
+                .expect("Invalid default profile"),
         }
     }
 }
