@@ -8,3 +8,8 @@
 (allow file-map-executable)
 (allow mach-lookup)
 (allow sysctl-read)
+(allow network-outbound)
+(allow process-exec)
+{% for dir in path %}
+(allow file-read* (subpath "{{ dir }}"))
+{% endfor %}
