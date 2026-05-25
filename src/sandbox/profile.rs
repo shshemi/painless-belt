@@ -1,10 +1,7 @@
 use crate::{
     AppResult,
-    dir::{profile, profiles_dir},
-    sandbox::{
-        ToSbdl,
-        template::{self, render},
-    },
+    dir::profile,
+    sandbox::{ToSbdl, template::render},
 };
 
 #[derive(Debug)]
@@ -31,13 +28,9 @@ impl Profile {
         })
     }
 
-    pub fn allow(mut self, op: impl ToSbdl + 'static) -> Self {
-        self.inner.push_str(&format!("\n(allow {})", op.to_sbdl()));
-        self
-    }
-
-    pub fn deny(mut self, op: impl ToSbdl + 'static) -> Self {
-        self.inner.push_str(&format!("\n(deny {})", op.to_sbdl()));
+    pub fn with(mut self, rules: &impl ToSbdl) -> Self {
+        self.inner.push('\n');
+        self.inner.push_str(rules.to_sbdl());
         self
     }
 
@@ -54,6 +47,8 @@ impl AsRef<str> for Profile {
 
 impl Default for Profile {
     fn default() -> Self {
-        todo!()
+        Self {
+            inner: render(include_str!("../../default.pb")).expect("Invalid default profile"),
+        }
     }
 }

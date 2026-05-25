@@ -18,7 +18,8 @@ pub fn profiles_dir() -> AppResult<PathBuf> {
 
 pub fn profile(name: &str) -> AppResult<PathBuf> {
     let profiles = profiles_dir()?;
-    let profile = profiles.join(name);
+    let mut profile = profiles.join(name);
+    profile.as_mut_os_string().push(".pb");
     if profile.is_file() {
         Ok(profile)
     } else {
