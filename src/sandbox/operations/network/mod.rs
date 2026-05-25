@@ -1,3 +1,4 @@
+#[allow(clippy::module_inception)]
 pub mod network;
 pub mod network_bind;
 pub mod network_inbound;
@@ -20,8 +21,6 @@ impl Proto {
     }
 }
 
-/// macOS sandbox only accepts `*` or `localhost` for the host portion of a
-/// network filter — arbitrary IPs and hostnames are rejected at profile init.
 #[derive(Debug)]
 pub enum Host {
     Any,
