@@ -4,6 +4,8 @@ use std::ptr;
 
 use thiserror::Error;
 
+use crate::AppResult;
+
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 pub enum Error {
     #[error("sandbox_init failed: {0}")]
@@ -14,7 +16,7 @@ pub enum Error {
     InvalidParameter(String),
 }
 
-pub fn sandbox_init(profile: &str, flags: u64) -> Result<(), Error> {
+pub fn sandbox_init(profile: &str, flags: u64) -> AppResult<()> {
     let profile_c = CString::new(profile).map_err(|_| Error::InvalidProfile)?;
     let mut errorbuf: *mut c_char = ptr::null_mut();
     let rc = unsafe { c_api::sandbox_init(profile_c.as_ptr(), flags, &mut errorbuf) };
@@ -33,7 +35,7 @@ pub fn sandbox_init(profile: &str, flags: u64) -> Result<(), Error> {
         unsafe { c_api::sandbox_free_error(errorbuf) };
         s
     };
-    Err(Error::Sandbox(msg))
+    Err(Error::Sandbox(msg).into())
 }
 
 mod c_api {
