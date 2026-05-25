@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
-use super::escape;
-use crate::traits::ToSbpl;
+use crate::misc::ext::str_ext::StrExt;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct ReadDirectory(PathBuf);
@@ -12,11 +12,11 @@ impl ReadDirectory {
     }
 }
 
-impl ToSbpl for ReadDirectory {
-    fn to_sbpl(&self) -> String {
+impl ToSbdl for ReadDirectory {
+    fn to_sbdl(&self) -> String {
         format!(
             "(allow file-read* (subpath \"{}\"))",
-            escape(&self.0.to_string_lossy())
+            self.0.to_string_lossy().escape()
         )
     }
 }
@@ -28,7 +28,7 @@ mod tests {
     #[test]
     fn read_directory_renders() {
         assert_eq!(
-            ReadDirectory::new("/etc").to_sbpl(),
+            ReadDirectory::new("/etc").to_sbdl(),
             r#"(allow file-read* (subpath "/etc"))"#
         );
     }
@@ -36,7 +36,7 @@ mod tests {
     #[test]
     fn read_directory_escapes_quotes_and_backslashes() {
         assert_eq!(
-            ReadDirectory::new(r#"/odd"path\here"#).to_sbpl(),
+            ReadDirectory::new(r#"/odd"path\here"#).to_sbdl(),
             r#"(allow file-read* (subpath "/odd\"path\\here"))"#
         );
     }

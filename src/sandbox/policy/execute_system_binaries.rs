@@ -1,10 +1,10 @@
-use crate::traits::ToSbpl;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct ExecuteSystemBinaries;
 
-impl ToSbpl for ExecuteSystemBinaries {
-    fn to_sbpl(&self) -> String {
+impl ToSbdl for ExecuteSystemBinaries {
+    fn to_sbdl(&self) -> String {
         r#"(allow process-exec)
 (allow process-fork)
 (allow file-read* (subpath "/"))
@@ -43,6 +43,6 @@ mod tests {
             (allow ipc-posix-shm)\n\
             (allow system-socket)\n\
             (allow signal)";
-        assert_eq!(ExecuteSystemBinaries.to_sbpl(), expected);
+        assert_eq!(ExecuteSystemBinaries.to_sbdl(), expected);
     }
 }

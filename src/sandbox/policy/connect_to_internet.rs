@@ -1,10 +1,10 @@
-use crate::traits::ToSbpl;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct ConnectToInternet;
 
-impl ToSbpl for ConnectToInternet {
-    fn to_sbpl(&self) -> String {
+impl ToSbdl for ConnectToInternet {
+    fn to_sbdl(&self) -> String {
         "(allow network-outbound)".to_string()
     }
 }
@@ -15,6 +15,6 @@ mod tests {
 
     #[test]
     fn connect_to_internet_renders() {
-        assert_eq!(ConnectToInternet.to_sbpl(), "(allow network-outbound)");
+        assert_eq!(ConnectToInternet.to_sbdl(), "(allow network-outbound)");
     }
 }

@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
-use super::escape;
-use crate::traits::ToSbpl;
+use crate::misc::ext::str_ext::StrExt;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct WriteDirectory(PathBuf);
@@ -12,11 +12,11 @@ impl WriteDirectory {
     }
 }
 
-impl ToSbpl for WriteDirectory {
-    fn to_sbpl(&self) -> String {
+impl ToSbdl for WriteDirectory {
+    fn to_sbdl(&self) -> String {
         format!(
             "(allow file-write* (subpath \"{}\"))",
-            escape(&self.0.to_string_lossy())
+            self.0.to_string_lossy().escape()
         )
     }
 }
@@ -28,7 +28,7 @@ mod tests {
     #[test]
     fn write_directory_renders() {
         assert_eq!(
-            WriteDirectory::new("/tmp").to_sbpl(),
+            WriteDirectory::new("/tmp").to_sbdl(),
             r#"(allow file-write* (subpath "/tmp"))"#
         );
     }
@@ -36,7 +36,7 @@ mod tests {
     #[test]
     fn write_directory_escapes_quotes_and_backslashes() {
         assert_eq!(
-            WriteDirectory::new(r#"/odd"path\here"#).to_sbpl(),
+            WriteDirectory::new(r#"/odd"path\here"#).to_sbdl(),
             r#"(allow file-write* (subpath "/odd\"path\\here"))"#
         );
     }

@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
-use super::escape;
-use crate::traits::ToSbpl;
+use crate::misc::ext::str_ext::StrExt;
+use crate::sandbox::ToSbdl;
 
 #[derive(Debug)]
 pub struct ProtectDirectory(PathBuf);
@@ -12,9 +12,9 @@ impl ProtectDirectory {
     }
 }
 
-impl ToSbpl for ProtectDirectory {
-    fn to_sbpl(&self) -> String {
-        let p = escape(&self.0.to_string_lossy());
+impl ToSbdl for ProtectDirectory {
+    fn to_sbdl(&self) -> String {
+        let p = self.0.to_string_lossy().escape();
         format!("(deny file-read* (subpath \"{p}\"))\n(deny file-write* (subpath \"{p}\"))")
     }
 }
@@ -26,7 +26,7 @@ mod tests {
     #[test]
     fn protect_directory_renders() {
         assert_eq!(
-            ProtectDirectory::new("/Users/me/.ssh").to_sbpl(),
+            ProtectDirectory::new("/Users/me/.ssh").to_sbdl(),
             "(deny file-read* (subpath \"/Users/me/.ssh\"))\n\
              (deny file-write* (subpath \"/Users/me/.ssh\"))"
         );
@@ -35,7 +35,7 @@ mod tests {
     #[test]
     fn protect_directory_escapes_quotes_and_backslashes() {
         assert_eq!(
-            ProtectDirectory::new(r#"/odd"path\here"#).to_sbpl(),
+            ProtectDirectory::new(r#"/odd"path\here"#).to_sbdl(),
             "(deny file-read* (subpath \"/odd\\\"path\\\\here\"))\n\
              (deny file-write* (subpath \"/odd\\\"path\\\\here\"))"
         );
