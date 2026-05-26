@@ -5,11 +5,15 @@ use clap::{Args, Parser, Subcommand};
 #[derive(Parser, Debug)]
 #[command(
     name = "painless-belt",
-    about = "Run a command in a macOS sandbox with sensible defaults."
+    about = "Run a command in a macOS sandbox with sensible defaults.",
+    args_conflicts_with_subcommands = true
 )]
 pub struct Cli {
     #[command(subcommand)]
     pub subcommand: Option<SubCmd>,
+
+    #[command(flatten)]
+    pub run: RunArgs,
 }
 
 #[derive(Subcommand, Debug)]
@@ -81,7 +85,7 @@ pub fn cli() -> &'static Cli {
     OL.get_or_init(|| {
         let mut cli = Cli::parse();
         if cli.subcommand.is_none() {
-            cli.subcommand = Some(Default::default());
+            cli.subcommand = Some(SubCmd::Run(std::mem::take(&mut cli.run)));
         }
         cli
     })
