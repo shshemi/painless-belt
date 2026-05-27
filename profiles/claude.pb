@@ -16,7 +16,6 @@
 (deny file-read* (literal "{{ home }}/.history"))
 (deny file-read* (literal "{{ home }}/.npmrc"))
 (deny file-read* (literal "{{ home }}/.cargo/credentials.toml"))
-(deny file-read* (subpath "{{ home }}/Library/Keychains"))
 (deny file-read* (subpath "{{ home }}/Library/Mail"))
 (deny file-read* (subpath "{{ home }}/Library/Messages"))
 (deny file-read* (subpath "{{ home }}/Library/Cookies"))
@@ -44,6 +43,8 @@
 (allow process-exec)
 (allow process-fork)
 (allow system-socket)
+(allow file-write* (subpath "{{ home }}/.claude"))
+(allow file-write* (prefix "{{ home }}/.claude.json"))
 {% for dir in path %}
 (allow file-read* (subpath "{{ dir }}"))
 {% endfor %}
