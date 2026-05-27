@@ -35,23 +35,8 @@ impl Default for SubCmd {
 #[derive(Args, Debug, Default)]
 pub struct RunArgs {
     /// Sanbox profile name.
+    #[arg(short, long)]
     pub profile: Option<String>,
-
-    /// Disable outbound network access.
-    #[arg(long = "no-internet")]
-    pub no_internet: bool,
-
-    /// Disable execution of system binaries (/usr/bin, /bin).
-    #[arg(long = "no-system-binaries")]
-    pub no_system_binaries: bool,
-
-    /// Disable read/write access to the current working directory.
-    #[arg(long = "no-cwd")]
-    pub no_cwd: bool,
-
-    /// Disable read/write access to /tmp (and /private/tmp).
-    #[arg(long = "no-tmp")]
-    pub no_tmp: bool,
 
     /// Command and args to run inside the sandbox (after `--`).
     #[arg(last = true)]
