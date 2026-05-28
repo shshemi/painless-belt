@@ -19,11 +19,12 @@ fn main() -> AppResult<()> {
 }
 
 fn run(args: &RunArgs) -> AppResult<()> {
-    let profile = if let Some(name) = args.profile.as_ref() {
+    let mut profile = if let Some(name) = args.profile.as_ref() {
         Profile::load(name)?
     } else {
         Profile::default()
     };
+    profile.push_rules(&args.rules.to_sbpl());
     profile.init()?;
     exec(&args.command)?;
     Ok(())

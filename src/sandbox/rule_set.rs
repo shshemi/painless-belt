@@ -653,7 +653,7 @@ fn regex_str(r: &Regex) -> String {
     r.as_str().replace('"', "\\\"")
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Proto {
     Ip,
     Tcp,

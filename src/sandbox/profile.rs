@@ -34,6 +34,13 @@ impl Profile {
         self
     }
 
+    pub fn push_rules(&mut self, rules: &str) {
+        if !rules.is_empty() {
+            self.inner.push('\n');
+            self.inner.push_str(rules);
+        }
+    }
+
     pub fn init(&self) -> AppResult<()> {
         crate::ffi::sandbox_init(&self.inner, 0)
     }

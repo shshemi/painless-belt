@@ -1,6 +1,10 @@
+pub mod rule_args;
+
 use std::{ffi::OsString, sync::OnceLock};
 
 use clap::{Args, Parser, Subcommand};
+
+use rule_args::RuleArgs;
 
 #[derive(Parser, Debug)]
 #[command(
@@ -16,6 +20,7 @@ pub struct Cli {
     pub run: RunArgs,
 }
 
+#[allow(clippy::large_enum_variant)]
 #[derive(Subcommand, Debug)]
 pub enum SubCmd {
     /// Run a command inside the sandbox (default).
@@ -37,6 +42,9 @@ pub struct RunArgs {
     /// Sanbox profile name.
     #[arg(short, long)]
     pub profile: Option<String>,
+
+    #[command(flatten)]
+    pub rules: RuleArgs,
 
     /// Command and args to run inside the sandbox (after `--`).
     #[arg(last = true)]
