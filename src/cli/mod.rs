@@ -20,6 +20,16 @@ pub struct Cli {
     pub run: RunArgs,
 }
 
+impl Cli {
+    /// Returns the run args if the active subcommand is `Run`, else `None`.
+    pub fn run_args(&self) -> Option<&RunArgs> {
+        match &self.subcommand {
+            Some(SubCmd::Run(args)) => Some(args),
+            _ => None,
+        }
+    }
+}
+
 #[allow(clippy::large_enum_variant)]
 #[derive(Subcommand, Debug)]
 pub enum SubCmd {
@@ -61,16 +71,6 @@ pub struct PullArgs {
 pub struct RemoveArgs {
     /// Name of the template to remove.
     pub name: String,
-}
-
-impl Cli {
-    /// Returns the run args if the active subcommand is `Run`, else `None`.
-    pub fn run_args(&self) -> Option<&RunArgs> {
-        match &self.subcommand {
-            Some(SubCmd::Run(args)) => Some(args),
-            _ => None,
-        }
-    }
 }
 
 pub fn cli() -> &'static Cli {

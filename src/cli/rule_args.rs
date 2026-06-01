@@ -4,7 +4,6 @@ use std::str::FromStr;
 use clap::Args;
 use regex::Regex;
 
-use crate::sandbox::ToSbdl;
 use crate::sandbox::rule_set::{Proto, RuleSet};
 
 /// A `<proto>:<address>` value for network `local`/`remote` filters,
@@ -72,21 +71,22 @@ macro_rules! path_rule_args {
             }
 
             impl $struct {
-                pub fn apply_to(&self, out: &mut String) {
+                pub fn apply_to(&self, mut rs: RuleSet) -> RuleSet {
                     $(
-                        for v in &self.[<allow_ $op _literal>] { out.push_str(RuleSet::default().allow().$op().literal(v).to_sbdl()); }
-                        for v in &self.[<allow_ $op _prefix>] { out.push_str(RuleSet::default().allow().$op().prefix(v).to_sbdl()); }
-                        for v in &self.[<allow_ $op _subpath>] { out.push_str(RuleSet::default().allow().$op().subpath(v).to_sbdl()); }
-                        for v in &self.[<allow_ $op _regex>] { out.push_str(RuleSet::default().allow().$op().regex(v.clone()).to_sbdl()); }
-                        if self.[<allow_ $op>] { out.push_str(RuleSet::default().allow().$op().any().to_sbdl()); }
+                        for v in &self.[<allow_ $op _literal>] { rs = rs.allow().$op().literal(v); }
+                        for v in &self.[<allow_ $op _prefix>] { rs = rs.allow().$op().prefix(v); }
+                        for v in &self.[<allow_ $op _subpath>] { rs = rs.allow().$op().subpath(v); }
+                        for v in &self.[<allow_ $op _regex>] { rs = rs.allow().$op().regex(v.clone()); }
+                        if self.[<allow_ $op>] { rs = rs.allow().$op().any(); }
                     )+
                     $(
-                        for v in &self.[<deny_ $op _literal>] { out.push_str(RuleSet::default().deny().$op().literal(v).to_sbdl()); }
-                        for v in &self.[<deny_ $op _prefix>] { out.push_str(RuleSet::default().deny().$op().prefix(v).to_sbdl()); }
-                        for v in &self.[<deny_ $op _subpath>] { out.push_str(RuleSet::default().deny().$op().subpath(v).to_sbdl()); }
-                        for v in &self.[<deny_ $op _regex>] { out.push_str(RuleSet::default().deny().$op().regex(v.clone()).to_sbdl()); }
-                        if self.[<deny_ $op>] { out.push_str(RuleSet::default().deny().$op().any().to_sbdl()); }
+                        for v in &self.[<deny_ $op _literal>] { rs = rs.deny().$op().literal(v); }
+                        for v in &self.[<deny_ $op _prefix>] { rs = rs.deny().$op().prefix(v); }
+                        for v in &self.[<deny_ $op _subpath>] { rs = rs.deny().$op().subpath(v); }
+                        for v in &self.[<deny_ $op _regex>] { rs = rs.deny().$op().regex(v.clone()); }
+                        if self.[<deny_ $op>] { rs = rs.deny().$op().any(); }
                     )+
+                    rs
                 }
             }
         }
@@ -115,21 +115,22 @@ macro_rules! mach_rule_args {
             }
 
             impl $struct {
-                pub fn apply_to(&self, out: &mut String) {
+                pub fn apply_to(&self, mut rs: RuleSet) -> RuleSet {
                     $(
-                        for v in &self.[<allow_ $op _global_name>] { out.push_str(RuleSet::default().allow().$op().global_name(v).to_sbdl()); }
-                        for v in &self.[<allow_ $op _local_name>] { out.push_str(RuleSet::default().allow().$op().local_name(v).to_sbdl()); }
-                        for v in &self.[<allow_ $op _global_name_regex>] { out.push_str(RuleSet::default().allow().$op().global_name_regex(v.clone()).to_sbdl()); }
-                        for v in &self.[<allow_ $op _local_name_regex>] { out.push_str(RuleSet::default().allow().$op().local_name_regex(v.clone()).to_sbdl()); }
-                        if self.[<allow_ $op>] { out.push_str(RuleSet::default().allow().$op().any().to_sbdl()); }
+                        for v in &self.[<allow_ $op _global_name>] { rs = rs.allow().$op().global_name(v); }
+                        for v in &self.[<allow_ $op _local_name>] { rs = rs.allow().$op().local_name(v); }
+                        for v in &self.[<allow_ $op _global_name_regex>] { rs = rs.allow().$op().global_name_regex(v.clone()); }
+                        for v in &self.[<allow_ $op _local_name_regex>] { rs = rs.allow().$op().local_name_regex(v.clone()); }
+                        if self.[<allow_ $op>] { rs = rs.allow().$op().any(); }
                     )+
                     $(
-                        for v in &self.[<deny_ $op _global_name>] { out.push_str(RuleSet::default().deny().$op().global_name(v).to_sbdl()); }
-                        for v in &self.[<deny_ $op _local_name>] { out.push_str(RuleSet::default().deny().$op().local_name(v).to_sbdl()); }
-                        for v in &self.[<deny_ $op _global_name_regex>] { out.push_str(RuleSet::default().deny().$op().global_name_regex(v.clone()).to_sbdl()); }
-                        for v in &self.[<deny_ $op _local_name_regex>] { out.push_str(RuleSet::default().deny().$op().local_name_regex(v.clone()).to_sbdl()); }
-                        if self.[<deny_ $op>] { out.push_str(RuleSet::default().deny().$op().any().to_sbdl()); }
+                        for v in &self.[<deny_ $op _global_name>] { rs = rs.deny().$op().global_name(v); }
+                        for v in &self.[<deny_ $op _local_name>] { rs = rs.deny().$op().local_name(v); }
+                        for v in &self.[<deny_ $op _global_name_regex>] { rs = rs.deny().$op().global_name_regex(v.clone()); }
+                        for v in &self.[<deny_ $op _local_name_regex>] { rs = rs.deny().$op().local_name_regex(v.clone()); }
+                        if self.[<deny_ $op>] { rs = rs.deny().$op().any(); }
                     )+
+                    rs
                 }
             }
         }
@@ -154,17 +155,18 @@ macro_rules! name_rule_args {
             }
 
             impl $struct {
-                pub fn apply_to(&self, out: &mut String) {
+                pub fn apply_to(&self, mut rs: RuleSet) -> RuleSet {
                     $(
-                        for v in &self.[<allow_ $op _name>] { out.push_str(RuleSet::default().allow().$op().name(v).to_sbdl()); }
-                        for v in &self.[<allow_ $op _regex>] { out.push_str(RuleSet::default().allow().$op().regex(v.clone()).to_sbdl()); }
-                        if self.[<allow_ $op>] { out.push_str(RuleSet::default().allow().$op().any().to_sbdl()); }
+                        for v in &self.[<allow_ $op _name>] { rs = rs.allow().$op().name(v); }
+                        for v in &self.[<allow_ $op _regex>] { rs = rs.allow().$op().regex(v.clone()); }
+                        if self.[<allow_ $op>] { rs = rs.allow().$op().any(); }
                     )+
                     $(
-                        for v in &self.[<deny_ $op _name>] { out.push_str(RuleSet::default().deny().$op().name(v).to_sbdl()); }
-                        for v in &self.[<deny_ $op _regex>] { out.push_str(RuleSet::default().deny().$op().regex(v.clone()).to_sbdl()); }
-                        if self.[<deny_ $op>] { out.push_str(RuleSet::default().deny().$op().any().to_sbdl()); }
+                        for v in &self.[<deny_ $op _name>] { rs = rs.deny().$op().name(v); }
+                        for v in &self.[<deny_ $op _regex>] { rs = rs.deny().$op().regex(v.clone()); }
+                        if self.[<deny_ $op>] { rs = rs.deny().$op().any(); }
                     )+
+                    rs
                 }
             }
         }
@@ -193,21 +195,22 @@ macro_rules! iokit_rule_args {
             }
 
             impl $struct {
-                pub fn apply_to(&self, out: &mut String) {
+                pub fn apply_to(&self, mut rs: RuleSet) -> RuleSet {
                     $(
-                        for v in &self.[<allow_ $op _user_client_class>] { out.push_str(RuleSet::default().allow().$op().user_client_class(v).to_sbdl()); }
-                        for v in &self.[<allow_ $op _user_client_class_regex>] { out.push_str(RuleSet::default().allow().$op().user_client_class_regex(v.clone()).to_sbdl()); }
-                        for v in &self.[<allow_ $op _property>] { out.push_str(RuleSet::default().allow().$op().property(v).to_sbdl()); }
-                        for v in &self.[<allow_ $op _property_regex>] { out.push_str(RuleSet::default().allow().$op().property_regex(v.clone()).to_sbdl()); }
-                        if self.[<allow_ $op>] { out.push_str(RuleSet::default().allow().$op().any().to_sbdl()); }
+                        for v in &self.[<allow_ $op _user_client_class>] { rs = rs.allow().$op().user_client_class(v); }
+                        for v in &self.[<allow_ $op _user_client_class_regex>] { rs = rs.allow().$op().user_client_class_regex(v.clone()); }
+                        for v in &self.[<allow_ $op _property>] { rs = rs.allow().$op().property(v); }
+                        for v in &self.[<allow_ $op _property_regex>] { rs = rs.allow().$op().property_regex(v.clone()); }
+                        if self.[<allow_ $op>] { rs = rs.allow().$op().any(); }
                     )+
                     $(
-                        for v in &self.[<deny_ $op _user_client_class>] { out.push_str(RuleSet::default().deny().$op().user_client_class(v).to_sbdl()); }
-                        for v in &self.[<deny_ $op _user_client_class_regex>] { out.push_str(RuleSet::default().deny().$op().user_client_class_regex(v.clone()).to_sbdl()); }
-                        for v in &self.[<deny_ $op _property>] { out.push_str(RuleSet::default().deny().$op().property(v).to_sbdl()); }
-                        for v in &self.[<deny_ $op _property_regex>] { out.push_str(RuleSet::default().deny().$op().property_regex(v.clone()).to_sbdl()); }
-                        if self.[<deny_ $op>] { out.push_str(RuleSet::default().deny().$op().any().to_sbdl()); }
+                        for v in &self.[<deny_ $op _user_client_class>] { rs = rs.deny().$op().user_client_class(v); }
+                        for v in &self.[<deny_ $op _user_client_class_regex>] { rs = rs.deny().$op().user_client_class_regex(v.clone()); }
+                        for v in &self.[<deny_ $op _property>] { rs = rs.deny().$op().property(v); }
+                        for v in &self.[<deny_ $op _property_regex>] { rs = rs.deny().$op().property_regex(v.clone()); }
+                        if self.[<deny_ $op>] { rs = rs.deny().$op().any(); }
                     )+
+                    rs
                 }
             }
         }
@@ -232,17 +235,18 @@ macro_rules! network_rule_args {
             }
 
             impl $struct {
-                pub fn apply_to(&self, out: &mut String) {
+                pub fn apply_to(&self, mut rs: RuleSet) -> RuleSet {
                     $(
-                        for s in &self.[<allow_ $op _local>] { out.push_str(RuleSet::default().allow().$op().local(s.proto.clone(), &s.addr).to_sbdl()); }
-                        for s in &self.[<allow_ $op _remote>] { out.push_str(RuleSet::default().allow().$op().remote(s.proto.clone(), &s.addr).to_sbdl()); }
-                        if self.[<allow_ $op>] { out.push_str(RuleSet::default().allow().$op().any().to_sbdl()); }
+                        for s in &self.[<allow_ $op _local>] { rs = rs.allow().$op().local(s.proto.clone(), &s.addr); }
+                        for s in &self.[<allow_ $op _remote>] { rs = rs.allow().$op().remote(s.proto.clone(), &s.addr); }
+                        if self.[<allow_ $op>] { rs = rs.allow().$op().any(); }
                     )+
                     $(
-                        for s in &self.[<deny_ $op _local>] { out.push_str(RuleSet::default().deny().$op().local(s.proto.clone(), &s.addr).to_sbdl()); }
-                        for s in &self.[<deny_ $op _remote>] { out.push_str(RuleSet::default().deny().$op().remote(s.proto.clone(), &s.addr).to_sbdl()); }
-                        if self.[<deny_ $op>] { out.push_str(RuleSet::default().deny().$op().any().to_sbdl()); }
+                        for s in &self.[<deny_ $op _local>] { rs = rs.deny().$op().local(s.proto.clone(), &s.addr); }
+                        for s in &self.[<deny_ $op _remote>] { rs = rs.deny().$op().remote(s.proto.clone(), &s.addr); }
+                        if self.[<deny_ $op>] { rs = rs.deny().$op().any(); }
                     )+
+                    rs
                 }
             }
         }
@@ -265,13 +269,14 @@ macro_rules! signal_rule_args {
             }
 
             impl $struct {
-                pub fn apply_to(&self, out: &mut String) {
-                    if self.[<allow_ $op _self_target>] { out.push_str(RuleSet::default().allow().$op().self_target().to_sbdl()); }
-                    if self.[<allow_ $op _others>] { out.push_str(RuleSet::default().allow().$op().others().to_sbdl()); }
-                    if self.[<allow_ $op>] { out.push_str(RuleSet::default().allow().$op().any().to_sbdl()); }
-                    if self.[<deny_ $op _self_target>] { out.push_str(RuleSet::default().deny().$op().self_target().to_sbdl()); }
-                    if self.[<deny_ $op _others>] { out.push_str(RuleSet::default().deny().$op().others().to_sbdl()); }
-                    if self.[<deny_ $op>] { out.push_str(RuleSet::default().deny().$op().any().to_sbdl()); }
+                pub fn apply_to(&self, mut rs: RuleSet) -> RuleSet {
+                    if self.[<allow_ $op _self_target>] { rs = rs.allow().$op().self_target(); }
+                    if self.[<allow_ $op _others>] { rs = rs.allow().$op().others(); }
+                    if self.[<allow_ $op>] { rs = rs.allow().$op().any(); }
+                    if self.[<deny_ $op _self_target>] { rs = rs.deny().$op().self_target(); }
+                    if self.[<deny_ $op _others>] { rs = rs.deny().$op().others(); }
+                    if self.[<deny_ $op>] { rs = rs.deny().$op().any(); }
+                    rs
                 }
             }
         }
@@ -292,9 +297,10 @@ macro_rules! bare_rule_args {
             }
 
             impl $struct {
-                pub fn apply_to(&self, out: &mut String) {
-                    $( if self.[<allow_ $op>] { out.push_str(RuleSet::default().allow().$op().to_sbdl()); } )+
-                    $( if self.[<deny_ $op>] { out.push_str(RuleSet::default().deny().$op().to_sbdl()); } )+
+                pub fn apply_to(&self, mut rs: RuleSet) -> RuleSet {
+                    $( if self.[<allow_ $op>] { rs = rs.allow().$op(); } )+
+                    $( if self.[<deny_ $op>] { rs = rs.deny().$op(); } )+
+                    rs
                 }
             }
         }
@@ -406,18 +412,18 @@ pub struct RuleArgs {
 }
 
 impl RuleArgs {
-    /// Render all set flags into SBPL rule lines (allow rules then deny rules
+    /// Render all set flags into a `RuleSet` (allow rules then deny rules
     /// per group, so denies win under SBPL's last-match-wins evaluation).
-    pub fn to_sbpl(&self) -> String {
-        let mut out = String::new();
-        self.file.apply_to(&mut out);
-        self.mach.apply_to(&mut out);
-        self.mach_bare.apply_to(&mut out);
-        self.ipc_sysctl.apply_to(&mut out);
-        self.iokit.apply_to(&mut out);
-        self.network.apply_to(&mut out);
-        self.signal.apply_to(&mut out);
-        out
+    pub fn rule_set(&self) -> RuleSet {
+        let mut rs = RuleSet::default();
+        rs = self.file.apply_to(rs);
+        rs = self.mach.apply_to(rs);
+        rs = self.mach_bare.apply_to(rs);
+        rs = self.ipc_sysctl.apply_to(rs);
+        rs = self.iokit.apply_to(rs);
+        rs = self.network.apply_to(rs);
+        rs = self.signal.apply_to(rs);
+        rs
     }
 }
 
@@ -442,6 +448,8 @@ mod tests {
         assert!("tcp".parse::<NetSpec>().is_err());
     }
 
+    use crate::sandbox::ToSbdl;
+
     #[test]
     fn file_rules_emit_allow_before_deny() {
         let args = FileRuleArgs {
@@ -449,10 +457,9 @@ mod tests {
             deny_file_read_subpath: vec![PathBuf::from("/tmp/secret")],
             ..Default::default()
         };
-        let mut out = String::new();
-        args.apply_to(&mut out);
+        let rs = args.apply_to(RuleSet::default());
         assert_eq!(
-            out,
+            rs.to_sbdl(),
             "(allow file-read* (subpath \"/tmp\"))\n\
              (deny file-read* (subpath \"/tmp/secret\"))\n"
         );
@@ -464,9 +471,8 @@ mod tests {
             allow_file_read: true,
             ..Default::default()
         };
-        let mut out = String::new();
-        args.apply_to(&mut out);
-        assert_eq!(out, "(allow file-read*)\n");
+        let rs = args.apply_to(RuleSet::default());
+        assert_eq!(rs.to_sbdl(), "(allow file-read*)\n");
     }
 
     #[test]
@@ -475,8 +481,10 @@ mod tests {
             allow_network_outbound_remote: vec!["tcp:*:443".parse().unwrap()],
             ..Default::default()
         };
-        let mut out = String::new();
-        args.apply_to(&mut out);
-        assert_eq!(out, "(allow network-outbound (remote tcp \"*:443\"))\n");
+        let rs = args.apply_to(RuleSet::default());
+        assert_eq!(
+            rs.to_sbdl(),
+            "(allow network-outbound (remote tcp \"*:443\"))\n"
+        );
     }
 }

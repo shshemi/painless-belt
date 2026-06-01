@@ -4,7 +4,8 @@ use anyhow::anyhow;
 use painless_belt::{
     AppResult,
     cli::{RunArgs, cli},
-    dir, sandbox::profile::Profile,
+    dir,
+    sandbox::profile::Profile,
 };
 
 fn main() -> AppResult<()> {
@@ -30,7 +31,7 @@ fn run(args: &RunArgs) -> AppResult<()> {
     } else {
         Profile::default()
     };
-    profile.push_rules(&args.rules.to_sbpl());
+    profile = profile.with(&args.rules.rule_set());
     profile.init()?;
     exec(&args.command)?;
     Ok(())
