@@ -4,15 +4,21 @@ use anyhow::anyhow;
 use painless_belt::{
     AppResult,
     cli::{RunArgs, cli},
-    sandbox::profile::Profile,
+    dir, sandbox::profile::Profile,
 };
 
 fn main() -> AppResult<()> {
     let cli = cli();
     match &cli.subcommand.as_ref().unwrap() {
         painless_belt::cli::SubCmd::Run(args) => run(args)?,
-        painless_belt::cli::SubCmd::Pull(_args) => todo!(),
-        painless_belt::cli::SubCmd::Remove(_args) => todo!(),
+        painless_belt::cli::SubCmd::Pull(args) => {
+            let p = dir::pull_profile(&args.name)?;
+            println!("Pulled  {}", p.display());
+        }
+        painless_belt::cli::SubCmd::Remove(args) => {
+            let p = dir::remove_profile(&args.name)?;
+            println!("Removed {}", p.display());
+        }
     }
 
     Ok(())
