@@ -52,7 +52,7 @@ impl FromStr for NetSpec {
 // ── path-filter ops (file-*): literal/prefix/subpath + regex + bare ──
 macro_rules! path_rule_args {
     ($struct:ident, $heading:literal, $($op:ident),+ $(,)?) => {
-        paste::paste! {
+        pastey::paste! {
             #[derive(Args, Debug, Default)]
             #[command(next_help_heading = $heading)]
             pub struct $struct {
@@ -96,7 +96,7 @@ macro_rules! path_rule_args {
 // ── mach filtered ops (mach-lookup, mach-register) ──
 macro_rules! mach_rule_args {
     ($struct:ident, $heading:literal, $($op:ident),+ $(,)?) => {
-        paste::paste! {
+        pastey::paste! {
             #[derive(Args, Debug, Default)]
             #[command(next_help_heading = $heading)]
             pub struct $struct {
@@ -140,7 +140,7 @@ macro_rules! mach_rule_args {
 // ── name-filter ops (ipc, sysctl): name + regex + bare ──
 macro_rules! name_rule_args {
     ($struct:ident, $heading:literal, $($op:ident),+ $(,)?) => {
-        paste::paste! {
+        pastey::paste! {
             #[derive(Args, Debug, Default)]
             #[command(next_help_heading = $heading)]
             pub struct $struct {
@@ -176,7 +176,7 @@ macro_rules! name_rule_args {
 // ── iokit ops: user-client-class/property (+regex) + bare ──
 macro_rules! iokit_rule_args {
     ($struct:ident, $heading:literal, $($op:ident),+ $(,)?) => {
-        paste::paste! {
+        pastey::paste! {
             #[derive(Args, Debug, Default)]
             #[command(next_help_heading = $heading)]
             pub struct $struct {
@@ -220,7 +220,7 @@ macro_rules! iokit_rule_args {
 // ── network ops: local/remote (proto:addr) + bare ──
 macro_rules! network_rule_args {
     ($struct:ident, $heading:literal, $($op:ident),+ $(,)?) => {
-        paste::paste! {
+        pastey::paste! {
             #[derive(Args, Debug, Default)]
             #[command(next_help_heading = $heading)]
             pub struct $struct {
@@ -256,7 +256,7 @@ macro_rules! network_rule_args {
 // ── signal: self-target/others + bare ──
 macro_rules! signal_rule_args {
     ($struct:ident, $heading:literal, $op:ident) => {
-        paste::paste! {
+        pastey::paste! {
             #[derive(Args, Debug, Default)]
             #[command(next_help_heading = $heading)]
             pub struct $struct {
@@ -286,7 +286,7 @@ macro_rules! signal_rule_args {
 // ── bare mach ops (no filter) ──
 macro_rules! bare_rule_args {
     ($struct:ident, $heading:literal, $($op:ident),+ $(,)?) => {
-        paste::paste! {
+        pastey::paste! {
             #[derive(Args, Debug, Default)]
             #[command(next_help_heading = $heading)]
             pub struct $struct {

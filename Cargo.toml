@@ -15,7 +15,7 @@ hostname = "0.4"
 libc = "0.2"
 local-ip-address = "0.6"
 minijinja = { version = "2", features = ["loader"] }
-paste = "1"
+pastey = "0.1"
 regex = "1.12.3"
 thiserror = "2.0.18"
 ureq = "3"
