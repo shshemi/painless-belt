@@ -6,6 +6,7 @@
 (allow file-read* (subpath "{{ home }}/.cache/claude"))
 (allow file-read* (subpath "{{ home }}/Library/Caches/claude-cli-nodejs"))
 (allow file-read* (subpath "{{ home }}/Library/Keychains"))
+(allow file-write* (subpath "{{ home }}/Library/Keychains"))
 (allow file-write* (subpath "{{ home }}/.claude"))
 (allow file-write* (prefix "{{ home }}/.claude.json"))
 (allow file-write* (subpath "{{ home }}/.local/state/claude"))
