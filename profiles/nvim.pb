@@ -1,0 +1,11 @@
+{% include "default" %}
+(allow file-read* (literal "{{ home }}/.gitconfig"))
+(allow file-read* (subpath "{{ home }}/.config/git"))
+(allow file-read* (subpath "{{ home }}/.config/nvim"))
+(allow file-write* (subpath "{{ home }}/.config/nvim"))
+(allow file-read* (subpath "{{ home }}/.local/share/nvim"))
+(allow file-write* (subpath "{{ home }}/.local/share/nvim"))
+(allow file-read* (subpath "{{ home }}/.local/state/nvim"))
+(allow file-write* (subpath "{{ home }}/.local/state/nvim"))
+(allow file-read* (subpath "{{ home }}/.cache/nvim"))
+(allow file-write* (subpath "{{ home }}/.cache/nvim"))
