@@ -10,6 +10,10 @@ pub fn home_dir() -> AppResult<PathBuf> {
     mkdir(dir)
 }
 
+pub fn config() -> AppResult<PathBuf> {
+    Ok(home_dir()?.join("config"))
+}
+
 pub fn profiles_dir() -> AppResult<PathBuf> {
     let home = home_dir()?;
     let dir = home.join("profiles");

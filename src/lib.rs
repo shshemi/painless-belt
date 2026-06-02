@@ -1,4 +1,5 @@
 pub mod cli;
+pub mod config;
 pub mod dir;
 pub mod ffi;
 pub mod http;

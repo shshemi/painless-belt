@@ -17,7 +17,9 @@ local-ip-address = "0.6"
 minijinja = { version = "2", features = ["loader"] }
 pastey = "0.1"
 regex = "1.12.3"
+serde = { version = "1.0.228", features = ["derive"] }
 thiserror = "2.0.18"
+toml = "1.1.2"
 ureq = "3"
 url = "2.5.8"
 

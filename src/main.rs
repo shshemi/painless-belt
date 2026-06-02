@@ -4,6 +4,7 @@ use anyhow::anyhow;
 use painless_belt::{
     AppResult,
     cli::{RunArgs, cli},
+    config::config,
     dir, http,
     sandbox::profile::Profile,
 };
@@ -27,6 +28,10 @@ fn main() -> AppResult<()> {
 
 fn run(args: &RunArgs) -> AppResult<()> {
     let mut profile = if let Some(name) = args.profile.as_ref() {
+        Profile::load(name)?
+    } else if let Some(cmd) = args.command.first()
+        && let Some(name) = config().profile_name(&cmd.as_os_str().to_string_lossy())
+    {
         Profile::load(name)?
     } else {
         Profile::default()
