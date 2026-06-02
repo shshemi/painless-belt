@@ -2,6 +2,7 @@
 (deny default)
 (allow file-read* (subpath "{{ pwd }}"))
 (allow file-write* (subpath "{{ pwd }}"))
+(allow file-read* (literal "{{ home }}/.CFUserTextEncoding"))
 (allow file-read* (literal "/"))
 (allow file-read* (subpath "/Library"))
 (allow file-read* (subpath "/opt"))

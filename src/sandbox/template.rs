@@ -1,16 +1,26 @@
 use std::collections::BTreeMap;
-use std::env;
 use std::path::Path;
 use std::process::Command;
+use std::{env, fs};
 
 use minijinja::{Environment, Value};
 
-use crate::AppResult;
 use crate::cli::cli;
+use crate::{AppResult, dir};
 
 pub fn render(template: &str) -> AppResult<String> {
+    let mut jinja = Environment::new();
+    // Resolve {% include "X.pb" %} from the user's profile store.
+    jinja.set_loader(move |name| {
+        Ok(dir::profile(name)
+            .ok()
+            .map(fs::read_to_string)
+            .and_then(Result::ok))
+    });
+
     let cli = cli();
-    let cmdline: &[std::ffi::OsString] = cli.run_args().map(|r| r.command.as_slice()).unwrap_or(&[]);
+    let cmdline: &[std::ffi::OsString] =
+        cli.run_args().map(|r| r.command.as_slice()).unwrap_or(&[]);
     let command = cmdline
         .first()
         .map(|s| s.to_string_lossy().into_owned())
@@ -64,7 +74,7 @@ pub fn render(template: &str) -> AppResult<String> {
     for (k, v) in env::vars() {
         ctx.insert(format!("env_{k}"), Value::from(v));
     }
-    Ok(Environment::new().render_str(template, ctx)?)
+    Ok(jinja.render_str(template, ctx)?)
 }
 
 fn path_to_string<P: AsRef<Path>>(p: P) -> String {
