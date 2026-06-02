@@ -4,7 +4,7 @@ use anyhow::anyhow;
 use painless_belt::{
     AppResult,
     cli::{RunArgs, cli},
-    dir,
+    dir, http,
     sandbox::profile::Profile,
 };
 
@@ -13,7 +13,7 @@ fn main() -> AppResult<()> {
     match &cli.subcommand.as_ref().unwrap() {
         painless_belt::cli::SubCmd::Run(args) => run(args)?,
         painless_belt::cli::SubCmd::Pull(args) => {
-            let p = dir::pull_profile(&args.name)?;
+            let p = http::pull_profile(&args.name)?;
             println!("Pulled  {}", p.display());
         }
         painless_belt::cli::SubCmd::Remove(args) => {

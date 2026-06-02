@@ -1,6 +1,7 @@
 pub mod cli;
 pub mod dir;
 pub mod ffi;
+pub mod http;
 pub mod misc;
 pub mod sandbox;
 
