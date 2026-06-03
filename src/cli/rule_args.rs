@@ -392,6 +392,52 @@ network_rule_args!(
 
 signal_rule_args!(SignalRuleArgs, "Signal rules", signal);
 
+/// Convenience shortcuts that target ~/Library/Keychains.
+#[derive(Args, Debug, Default)]
+#[command(next_help_heading = "Keychain shortcuts")]
+pub struct KeychainRuleArgs {
+    /// Allow reading ~/Library/Keychains.
+    #[arg(long)]
+    pub allow_read_keychain: bool,
+    /// Allow writing ~/Library/Keychains.
+    #[arg(long)]
+    pub allow_write_keychain: bool,
+    /// Allow reading and writing ~/Library/Keychains.
+    #[arg(long)]
+    pub allow_readwrite_keychain: bool,
+    /// Deny reading ~/Library/Keychains.
+    #[arg(long)]
+    pub deny_read_keychain: bool,
+    /// Deny writing ~/Library/Keychains.
+    #[arg(long)]
+    pub deny_write_keychain: bool,
+    /// Deny reading and writing ~/Library/Keychains.
+    #[arg(long)]
+    pub deny_readwrite_keychain: bool,
+}
+
+impl KeychainRuleArgs {
+    pub fn apply_to(&self, mut rs: RuleSet) -> RuleSet {
+        let Some(home) = dirs::home_dir() else {
+            return rs;
+        };
+        let path = home.join("Library/Keychains");
+        if self.allow_read_keychain || self.allow_readwrite_keychain {
+            rs = rs.allow().file_read().subpath(&path);
+        }
+        if self.allow_write_keychain || self.allow_readwrite_keychain {
+            rs = rs.allow().file_write().subpath(&path);
+        }
+        if self.deny_read_keychain || self.deny_readwrite_keychain {
+            rs = rs.deny().file_read().subpath(&path);
+        }
+        if self.deny_write_keychain || self.deny_readwrite_keychain {
+            rs = rs.deny().file_write().subpath(&path);
+        }
+        rs
+    }
+}
+
 /// All sandbox-rule flag groups, flattened into the run command.
 #[derive(Args, Debug, Default)]
 pub struct RuleArgs {
@@ -409,6 +455,8 @@ pub struct RuleArgs {
     pub network: NetworkRuleArgs,
     #[command(flatten)]
     pub signal: SignalRuleArgs,
+    #[command(flatten)]
+    pub keychain: KeychainRuleArgs,
 }
 
 impl RuleArgs {
@@ -423,6 +471,7 @@ impl RuleArgs {
         rs = self.iokit.apply_to(rs);
         rs = self.network.apply_to(rs);
         rs = self.signal.apply_to(rs);
+        rs = self.keychain.apply_to(rs);
         rs
     }
 }
@@ -446,6 +495,39 @@ mod tests {
     #[test]
     fn netspec_rejects_missing_colon() {
         assert!("tcp".parse::<NetSpec>().is_err());
+    }
+
+    #[test]
+    fn keychain_readwrite_emits_allow_read_and_write() {
+        let args = KeychainRuleArgs {
+            allow_readwrite_keychain: true,
+            ..Default::default()
+        };
+        let rs = args.apply_to(RuleSet::default());
+        let home = dirs::home_dir().unwrap();
+        let kc = home.join("Library/Keychains").display().to_string();
+        assert_eq!(
+            rs.to_sbdl(),
+            format!(
+                "(allow file-read* (subpath \"{kc}\"))\n\
+                 (allow file-write* (subpath \"{kc}\"))\n"
+            )
+        );
+    }
+
+    #[test]
+    fn keychain_deny_read_emits_deny_only() {
+        let args = KeychainRuleArgs {
+            deny_read_keychain: true,
+            ..Default::default()
+        };
+        let rs = args.apply_to(RuleSet::default());
+        let home = dirs::home_dir().unwrap();
+        let kc = home.join("Library/Keychains").display().to_string();
+        assert_eq!(
+            rs.to_sbdl(),
+            format!("(deny file-read* (subpath \"{kc}\"))\n")
+        );
     }
 
     use crate::sandbox::ToSbdl;
