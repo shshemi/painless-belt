@@ -392,6 +392,51 @@ network_rule_args!(
 
 signal_rule_args!(SignalRuleArgs, "Signal rules", signal);
 
+/// Convenience shortcuts that target the user's home directory.
+#[derive(Args, Debug, Default)]
+#[command(next_help_heading = "Home shortcuts")]
+pub struct HomeRuleArgs {
+    /// Allow reading the home directory.
+    #[arg(long)]
+    pub allow_read_home: bool,
+    /// Allow writing the home directory.
+    #[arg(long)]
+    pub allow_write_home: bool,
+    /// Allow reading and writing the home directory.
+    #[arg(long)]
+    pub allow_readwrite_home: bool,
+    /// Deny reading the home directory.
+    #[arg(long)]
+    pub deny_read_home: bool,
+    /// Deny writing the home directory.
+    #[arg(long)]
+    pub deny_write_home: bool,
+    /// Deny reading and writing the home directory.
+    #[arg(long)]
+    pub deny_readwrite_home: bool,
+}
+
+impl HomeRuleArgs {
+    pub fn apply_to(&self, mut rs: RuleSet) -> RuleSet {
+        let Some(home) = dirs::home_dir() else {
+            return rs;
+        };
+        if self.allow_read_home || self.allow_readwrite_home {
+            rs = rs.allow().file_read().subpath(&home);
+        }
+        if self.allow_write_home || self.allow_readwrite_home {
+            rs = rs.allow().file_write().subpath(&home);
+        }
+        if self.deny_read_home || self.deny_readwrite_home {
+            rs = rs.deny().file_read().subpath(&home);
+        }
+        if self.deny_write_home || self.deny_readwrite_home {
+            rs = rs.deny().file_write().subpath(&home);
+        }
+        rs
+    }
+}
+
 /// Convenience shortcuts that target ~/Library/Keychains.
 #[derive(Args, Debug, Default)]
 #[command(next_help_heading = "Keychain shortcuts")]
@@ -456,6 +501,8 @@ pub struct RuleArgs {
     #[command(flatten)]
     pub signal: SignalRuleArgs,
     #[command(flatten)]
+    pub home: HomeRuleArgs,
+    #[command(flatten)]
     pub keychain: KeychainRuleArgs,
 }
 
@@ -471,6 +518,7 @@ impl RuleArgs {
         rs = self.iokit.apply_to(rs);
         rs = self.network.apply_to(rs);
         rs = self.signal.apply_to(rs);
+        rs = self.home.apply_to(rs);
         rs = self.keychain.apply_to(rs);
         rs
     }
@@ -511,6 +559,51 @@ mod tests {
             format!(
                 "(allow file-read* (subpath \"{kc}\"))\n\
                  (allow file-write* (subpath \"{kc}\"))\n"
+            )
+        );
+    }
+
+    #[test]
+    fn home_readwrite_emits_allow_read_and_write() {
+        let args = HomeRuleArgs {
+            allow_readwrite_home: true,
+            ..Default::default()
+        };
+        let rs = args.apply_to(RuleSet::default());
+        let home = dirs::home_dir().unwrap().display().to_string();
+        assert_eq!(
+            rs.to_sbdl(),
+            format!(
+                "(allow file-read* (subpath \"{home}\"))\n\
+                 (allow file-write* (subpath \"{home}\"))\n"
+            )
+        );
+    }
+
+    #[test]
+    fn home_allow_then_keychain_deny_ordering() {
+        // Home should emit before keychain so the narrower keychain deny
+        // wins over a broad home allow.
+        let args = RuleArgs {
+            home: HomeRuleArgs {
+                allow_read_home: true,
+                ..Default::default()
+            },
+            keychain: KeychainRuleArgs {
+                deny_read_keychain: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let rs = args.rule_set();
+        let home = dirs::home_dir().unwrap();
+        let h = home.display().to_string();
+        let kc = home.join("Library/Keychains").display().to_string();
+        assert_eq!(
+            rs.to_sbdl(),
+            format!(
+                "(allow file-read* (subpath \"{h}\"))\n\
+                 (deny file-read* (subpath \"{kc}\"))\n"
             )
         );
     }
