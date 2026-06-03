@@ -392,6 +392,54 @@ network_rule_args!(
 
 signal_rule_args!(SignalRuleArgs, "Signal rules", signal);
 
+/// Convenience shortcuts that open up running system binaries and loading
+/// system shared libraries.
+#[derive(Args, Debug, Default)]
+#[command(next_help_heading = "System shortcuts")]
+pub struct SystemRuleArgs {
+    /// Allow executing binaries found in $PATH (reads PATH dirs + system
+    /// library paths, plus process-exec / process-fork / file-map-executable).
+    #[arg(long)]
+    pub allow_system_binaries: bool,
+    /// Allow loading system shared libraries (reads /usr/lib, /System,
+    /// /Library, /opt, /usr/share, /, plus file-map-executable).
+    #[arg(long)]
+    pub allow_system_libraries: bool,
+}
+
+impl SystemRuleArgs {
+    pub fn apply_to(&self, mut rs: RuleSet) -> RuleSet {
+        // System binaries imply system libraries (dyld needs the libs to run
+        // the binary).
+        let want_libs = self.allow_system_binaries || self.allow_system_libraries;
+        if want_libs {
+            rs = rs.allow().file_read().literal("/");
+            for dir in [
+                "/usr/lib",
+                "/usr/share",
+                "/System",
+                "/Library",
+                "/opt",
+            ] {
+                rs = rs.allow().file_read().subpath(dir);
+            }
+            rs = rs.allow().file_map_executable().any();
+        }
+        if self.allow_system_binaries {
+            for dir in std::env::var("PATH")
+                .unwrap_or_default()
+                .split(':')
+                .filter(|s| !s.is_empty())
+            {
+                rs = rs.allow().file_read().subpath(dir);
+            }
+            rs = rs.allow().process_exec().any();
+            rs = rs.allow().process_fork();
+        }
+        rs
+    }
+}
+
 /// Convenience shortcuts that target the user's home directory.
 #[derive(Args, Debug, Default)]
 #[command(next_help_heading = "Home shortcuts")]
@@ -501,6 +549,8 @@ pub struct RuleArgs {
     #[command(flatten)]
     pub signal: SignalRuleArgs,
     #[command(flatten)]
+    pub system: SystemRuleArgs,
+    #[command(flatten)]
     pub home: HomeRuleArgs,
     #[command(flatten)]
     pub keychain: KeychainRuleArgs,
@@ -518,6 +568,7 @@ impl RuleArgs {
         rs = self.iokit.apply_to(rs);
         rs = self.network.apply_to(rs);
         rs = self.signal.apply_to(rs);
+        rs = self.system.apply_to(rs);
         rs = self.home.apply_to(rs);
         rs = self.keychain.apply_to(rs);
         rs
@@ -561,6 +612,38 @@ mod tests {
                  (allow file-write* (subpath \"{kc}\"))\n"
             )
         );
+    }
+
+    #[test]
+    fn system_libraries_emits_lib_paths_and_map_executable() {
+        let args = SystemRuleArgs {
+            allow_system_libraries: true,
+            ..Default::default()
+        };
+        let rs = args.apply_to(RuleSet::default());
+        assert_eq!(
+            rs.to_sbdl(),
+            "(allow file-read* (literal \"/\"))\n\
+             (allow file-read* (subpath \"/usr/lib\"))\n\
+             (allow file-read* (subpath \"/usr/share\"))\n\
+             (allow file-read* (subpath \"/System\"))\n\
+             (allow file-read* (subpath \"/Library\"))\n\
+             (allow file-read* (subpath \"/opt\"))\n\
+             (allow file-map-executable)\n"
+        );
+    }
+
+    #[test]
+    fn system_binaries_implies_libraries_and_adds_exec_fork() {
+        let args = SystemRuleArgs {
+            allow_system_binaries: true,
+            ..Default::default()
+        };
+        let sbdl = args.apply_to(RuleSet::default()).to_sbdl().to_string();
+        assert!(sbdl.contains("(allow file-read* (subpath \"/usr/lib\"))"));
+        assert!(sbdl.contains("(allow file-map-executable)"));
+        assert!(sbdl.contains("(allow process-exec)"));
+        assert!(sbdl.contains("(allow process-fork)"));
     }
 
     #[test]
