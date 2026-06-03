@@ -265,3 +265,9 @@ init_any!(init_iokit_open_any, iokit_open);
 init_any!(init_iokit_set_properties_any, iokit_set_properties);
 
 init_any!(init_signal_any, signal);
+
+// process / system-socket
+init_file!(init_process_exec, process_exec);
+init_any!(init_process_exec_any, process_exec);
+init_bare!(init_process_fork, process_fork);
+init_bare!(init_system_socket, system_socket);

@@ -580,6 +580,11 @@ bare_op!(mach_priv_host_port, "mach-priv-host-port");
 bare_op!(mach_priv_task_port, "mach-priv-task-port");
 bare_op!(mach_task_name, "mach-task-name");
 
+// ── process / system-socket ──
+file_op!(process_exec, ProcessExec, "process-exec");
+bare_op!(process_fork, "process-fork");
+bare_op!(system_socket, "system-socket");
+
 // ── ipc ──
 ipc_op!(ipc_posix_sem, IpcPosixSem, "ipc-posix-sem*");
 ipc_op!(
