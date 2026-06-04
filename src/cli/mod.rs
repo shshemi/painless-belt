@@ -37,6 +37,8 @@ pub enum SubCmd {
     Run(RunArgs),
     /// Pull a template.
     Pull(PullArgs),
+    /// Clone a profile (local copy, falls back to fetching upstream).
+    Clone(CloneArgs),
     /// Remove a previously-pulled template.
     Remove(RemoveArgs),
 }
@@ -65,6 +67,14 @@ pub struct RunArgs {
 pub struct PullArgs {
     /// Name of the template to pull.
     pub name: String,
+}
+
+#[derive(Args, Debug)]
+pub struct CloneArgs {
+    /// Source profile name (local file or upstream).
+    pub src: String,
+    /// Destination profile name (saved under ~/.painless-belt/profiles).
+    pub dst: String,
 }
 
 #[derive(Args, Debug)]

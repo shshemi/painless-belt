@@ -1,4 +1,4 @@
-use std::{ffi::OsString, os::unix::process::CommandExt, process::Command};
+use std::{ffi::OsString, fs, os::unix::process::CommandExt, process::Command};
 
 use anyhow::anyhow;
 use painless_belt::{
@@ -14,8 +14,18 @@ fn main() -> AppResult<()> {
     match &cli.subcommand.as_ref().unwrap() {
         painless_belt::cli::SubCmd::Run(args) => run(args)?,
         painless_belt::cli::SubCmd::Pull(args) => {
-            let p = http::pull_profile(&args.name)?;
+            let p = http::pull_profile(&args.name, &args.name)?;
             println!("Pulled  {}", p.display());
+        }
+        painless_belt::cli::SubCmd::Clone(args) => {
+            let loc = dir::profile_path(&args.src)?;
+            if loc.exists() {
+                let dst = dir::profile_path(&args.dst)?;
+                fs::copy(&loc, &dst)?;
+            } else {
+                http::pull_profile(&args.src, &args.dst)?;
+            }
+            println!("Cloned {}", &args.dst);
         }
         painless_belt::cli::SubCmd::Remove(args) => {
             let p = dir::remove_profile(&args.name)?;
