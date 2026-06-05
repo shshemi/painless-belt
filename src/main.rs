@@ -1,15 +1,20 @@
 use std::{ffi::OsString, os::unix::process::CommandExt, process::Command};
 
 use anyhow::anyhow;
+use clap::CommandFactory;
 use painless_belt::{
     AppResult,
-    cli::{RunArgs, cli},
+    cli::{Cli, RunArgs, cli},
     config::config,
     dir, http,
     sandbox::profile::Profile,
 };
 
 fn main() -> AppResult<()> {
+    if std::env::args().len() == 1 {
+        Cli::command().print_help()?;
+        return Ok(());
+    }
     let cli = cli();
     match &cli.subcommand.as_ref().unwrap() {
         painless_belt::cli::SubCmd::Run(args) => run(args)?,
