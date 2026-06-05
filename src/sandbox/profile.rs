@@ -23,7 +23,9 @@ impl Profile {
     }
 
     pub fn load(name: &str) -> AppResult<Self> {
-        let profile = render(&std::fs::read_to_string(profile_path(name)?)?)
+        let profile = profile_path(name)
+            .and_then(|p| Ok(std::fs::read_to_string(p)?))
+            .and_then(|s| render(&s))
             .map(|profile| Self { inner: profile });
         match name {
             "default" => Ok(profile.unwrap_or_default()),
@@ -51,8 +53,7 @@ impl Profile {
 
     pub fn empty() -> Self {
         Self {
-            inner: render(include_str!("../../profiles/empty.pb"))
-                .expect("Invalid default profile"),
+            inner: render(include_str!("../../profiles/empty.pb")).expect("Invalid profile"),
         }
     }
 }
