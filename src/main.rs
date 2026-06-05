@@ -27,6 +27,13 @@ fn main() -> AppResult<()> {
             let p = dir::remove_profile(&args.name)?;
             println!("Removed {}", p.display());
         }
+        painless_belt::cli::SubCmd::Edit(args) => {
+            let path = dir::profile_path(&args.name)?;
+            let editor = std::env::var("VISUAL")
+                .or_else(|_| std::env::var("EDITOR"))
+                .unwrap_or_else(|_| "vi".to_string());
+            Command::new(&editor).arg(&path).status()?;
+        }
     }
 
     Ok(())

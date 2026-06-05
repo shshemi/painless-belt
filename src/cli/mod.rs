@@ -39,6 +39,8 @@ pub enum SubCmd {
     Pull(PullArgs),
     /// Clone a profile (local copy, falls back to fetching upstream).
     Clone(CloneArgs),
+    /// Open a profile in $EDITOR.
+    Edit(EditArgs),
     /// Remove a previously-pulled template.
     Remove(RemoveArgs),
 }
@@ -75,6 +77,12 @@ pub struct CloneArgs {
     pub src: String,
     /// Destination profile name (saved under ~/.painless-belt/profiles).
     pub dst: String,
+}
+
+#[derive(Args, Debug)]
+pub struct EditArgs {
+    /// Name of the profile to open in $EDITOR.
+    pub name: String,
 }
 
 #[derive(Args, Debug)]
