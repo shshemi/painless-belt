@@ -12,7 +12,7 @@ pub fn render(template: &str) -> AppResult<String> {
     let mut jinja = Environment::new();
     // Resolve {% include "X.pb" %} from the user's profile store.
     jinja.set_loader(move |name| {
-        Ok(dir::profile(name)
+        Ok(dir::profile_path(name)
             .ok()
             .map(fs::read_to_string)
             .and_then(Result::ok))

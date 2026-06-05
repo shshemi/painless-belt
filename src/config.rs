@@ -11,7 +11,7 @@ pub struct Config {
 
 impl Config {
     pub fn load() -> AppResult<Self> {
-        let path = dir::config()?;
+        let path = dir::config_path()?;
         let content = fs::read_to_string(path)?;
         Ok(toml::from_str(&content)?)
     }

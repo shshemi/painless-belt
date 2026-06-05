@@ -1,6 +1,6 @@
 use crate::{
     AppResult,
-    dir::profile,
+    dir::profile_path,
     sandbox::{ToSbdl, template::render},
 };
 
@@ -24,7 +24,7 @@ impl Profile {
 
     pub fn load(name: &str) -> AppResult<Self> {
         Ok(Self {
-            inner: render(&std::fs::read_to_string(profile(name)?)?)?,
+            inner: render(&std::fs::read_to_string(profile_path(name)?)?)?,
         })
     }
 

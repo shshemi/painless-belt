@@ -10,29 +10,20 @@ pub fn home_dir() -> AppResult<PathBuf> {
     mkdir(dir)
 }
 
-pub fn config() -> AppResult<PathBuf> {
+pub fn config_path() -> AppResult<PathBuf> {
     Ok(home_dir()?.join("config"))
 }
 
-pub fn profiles_dir() -> AppResult<PathBuf> {
+pub fn profile_dir() -> AppResult<PathBuf> {
     let home = home_dir()?;
     let dir = home.join("profiles");
     mkdir(dir)
 }
 
 pub fn profile_path(name: &str) -> AppResult<PathBuf> {
-    let mut path = profiles_dir()?.join(name);
+    let mut path = profile_dir()?.join(name);
     path.as_mut_os_string().push(".pb");
     Ok(path)
-}
-
-pub fn profile(name: &str) -> AppResult<PathBuf> {
-    let path = profile_path(name)?;
-    if path.is_file() {
-        Ok(path)
-    } else {
-        Err(anyhow!("Invalid profile name"))
-    }
 }
 
 pub fn remove_profile(name: &str) -> AppResult<PathBuf> {
@@ -42,6 +33,13 @@ pub fn remove_profile(name: &str) -> AppResult<PathBuf> {
     }
     fs::remove_file(&path)?;
     Ok(path)
+}
+
+pub fn copy_profile(name: &str, dst: &str) -> AppResult<()> {
+    let src = profile_path(name)?;
+    let dst = profile_path(dst)?;
+    fs::copy(&src, &dst)?;
+    Ok(())
 }
 
 fn mkdir(dir: PathBuf) -> AppResult<PathBuf> {
