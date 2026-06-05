@@ -23,9 +23,13 @@ impl Profile {
     }
 
     pub fn load(name: &str) -> AppResult<Self> {
-        Ok(Self {
-            inner: render(&std::fs::read_to_string(profile_path(name)?)?)?,
-        })
+        let profile = render(&std::fs::read_to_string(profile_path(name)?)?)
+            .map(|profile| Self { inner: profile });
+        match name {
+            "default" => Ok(profile.unwrap_or_default()),
+            "empty" => Ok(profile.unwrap_or(Self::empty())),
+            _ => profile,
+        }
     }
 
     pub fn with(mut self, rules: &impl ToSbdl) -> Self {
