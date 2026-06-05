@@ -44,6 +44,13 @@ impl Profile {
     pub fn init(&self) -> AppResult<()> {
         crate::ffi::sandbox_init(&self.inner, 0)
     }
+
+    pub fn empty() -> Self {
+        Self {
+            inner: render(include_str!("../../profiles/empty.pb"))
+                .expect("Invalid default profile"),
+        }
+    }
 }
 
 impl AsRef<str> for Profile {
