@@ -14,7 +14,7 @@ use rule_args::RuleArgs;
     args_conflicts_with_subcommands = true
 )]
 pub struct Cli {
-    /// Print a shell-completion script to stdout and exit.
+    /// Ignore other arguments and print a shell-completion script to stdout.
     #[arg(long, value_name = "SHELL")]
     pub generate_completion: Option<Shell>,
 
