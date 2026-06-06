@@ -633,11 +633,11 @@ mod tests {
             allow_system_binaries: true,
             ..Default::default()
         };
-        let sbdl = args.apply_to(RuleSet::default()).to_sbpl().to_string();
-        assert!(sbdl.contains("(allow file-read* (subpath \"/usr/lib\"))"));
-        assert!(sbdl.contains("(allow file-map-executable)"));
-        assert!(sbdl.contains("(allow process-exec)"));
-        assert!(sbdl.contains("(allow process-fork)"));
+        let sbpl = args.apply_to(RuleSet::default()).to_sbpl().to_string();
+        assert!(sbpl.contains("(allow file-read* (subpath \"/usr/lib\"))"));
+        assert!(sbpl.contains("(allow file-map-executable)"));
+        assert!(sbpl.contains("(allow process-exec)"));
+        assert!(sbpl.contains("(allow process-fork)"));
     }
 
     #[test]

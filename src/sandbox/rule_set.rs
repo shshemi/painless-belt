@@ -34,13 +34,13 @@ impl ToSbpl for RuleSet<(), ()> {
 }
 
 pub trait Action {
-    fn sbdl() -> &'static str;
+    fn sbpl() -> &'static str;
 }
 
 pub struct Allow;
 
 impl Action for Allow {
-    fn sbdl() -> &'static str {
+    fn sbpl() -> &'static str {
         "allow"
     }
 }
@@ -48,7 +48,7 @@ impl Action for Allow {
 pub struct Deny;
 
 impl Action for Deny {
-    fn sbdl() -> &'static str {
+    fn sbpl() -> &'static str {
         "deny"
     }
 }
@@ -71,7 +71,7 @@ macro_rules! file_op {
                 writeln!(
                     self.inner,
                     "({} {} (literal \"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     path.as_ref().to_string_lossy().escape()
                 )
@@ -86,7 +86,7 @@ macro_rules! file_op {
                 writeln!(
                     self.inner,
                     "({} {} (prefix \"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     path.as_ref().to_string_lossy().escape()
                 )
@@ -101,7 +101,7 @@ macro_rules! file_op {
                 writeln!(
                     self.inner,
                     "({} {} (subpath \"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     path.as_ref().to_string_lossy().escape()
                 )
@@ -116,7 +116,7 @@ macro_rules! file_op {
                 writeln!(
                     self.inner,
                     "({} {} (regex #\"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     regex_str(&regex)
                 )
@@ -128,7 +128,7 @@ macro_rules! file_op {
             }
 
             pub fn any(mut self) -> RuleSet<(), ()> {
-                writeln!(self.inner, "({} {})", A::sbdl(), $sbpl).unwrap();
+                writeln!(self.inner, "({} {})", A::sbpl(), $sbpl).unwrap();
                 RuleSet {
                     inner: self.inner,
                     phantom: PhantomData,
@@ -156,7 +156,7 @@ macro_rules! mach_op {
                 writeln!(
                     self.inner,
                     "({} {} (global-name \"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     name.as_ref().escape()
                 )
@@ -171,7 +171,7 @@ macro_rules! mach_op {
                 writeln!(
                     self.inner,
                     "({} {} (local-name \"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     name.as_ref().escape()
                 )
@@ -186,7 +186,7 @@ macro_rules! mach_op {
                 writeln!(
                     self.inner,
                     "({} {} (global-name-regex #\"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     regex_str(&regex)
                 )
@@ -201,7 +201,7 @@ macro_rules! mach_op {
                 writeln!(
                     self.inner,
                     "({} {} (local-name-regex #\"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     regex_str(&regex)
                 )
@@ -213,7 +213,7 @@ macro_rules! mach_op {
             }
 
             pub fn any(mut self) -> RuleSet<(), ()> {
-                writeln!(self.inner, "({} {})", A::sbdl(), $sbpl).unwrap();
+                writeln!(self.inner, "({} {})", A::sbpl(), $sbpl).unwrap();
                 RuleSet {
                     inner: self.inner,
                     phantom: PhantomData,
@@ -241,7 +241,7 @@ macro_rules! ipc_op {
                 writeln!(
                     self.inner,
                     "({} {} (ipc-posix-name \"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     name.as_ref().escape()
                 )
@@ -256,7 +256,7 @@ macro_rules! ipc_op {
                 writeln!(
                     self.inner,
                     "({} {} (ipc-posix-name-regex #\"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     regex_str(&regex)
                 )
@@ -268,7 +268,7 @@ macro_rules! ipc_op {
             }
 
             pub fn any(mut self) -> RuleSet<(), ()> {
-                writeln!(self.inner, "({} {})", A::sbdl(), $sbpl).unwrap();
+                writeln!(self.inner, "({} {})", A::sbpl(), $sbpl).unwrap();
                 RuleSet {
                     inner: self.inner,
                     phantom: PhantomData,
@@ -296,7 +296,7 @@ macro_rules! sysctl_op {
                 writeln!(
                     self.inner,
                     "({} {} (sysctl-name \"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     name.as_ref().escape()
                 )
@@ -311,7 +311,7 @@ macro_rules! sysctl_op {
                 writeln!(
                     self.inner,
                     "({} {} (sysctl-name-regex #\"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     regex_str(&regex)
                 )
@@ -323,7 +323,7 @@ macro_rules! sysctl_op {
             }
 
             pub fn any(mut self) -> RuleSet<(), ()> {
-                writeln!(self.inner, "({} {})", A::sbdl(), $sbpl).unwrap();
+                writeln!(self.inner, "({} {})", A::sbpl(), $sbpl).unwrap();
                 RuleSet {
                     inner: self.inner,
                     phantom: PhantomData,
@@ -351,7 +351,7 @@ macro_rules! iokit_op {
                 writeln!(
                     self.inner,
                     "({} {} (iokit-user-client-class \"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     class.as_ref().escape()
                 )
@@ -366,7 +366,7 @@ macro_rules! iokit_op {
                 writeln!(
                     self.inner,
                     "({} {} (iokit-user-client-class-regex #\"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     regex_str(&regex)
                 )
@@ -381,7 +381,7 @@ macro_rules! iokit_op {
                 writeln!(
                     self.inner,
                     "({} {} (iokit-property \"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     prop.as_ref().escape()
                 )
@@ -396,7 +396,7 @@ macro_rules! iokit_op {
                 writeln!(
                     self.inner,
                     "({} {} (iokit-property-regex #\"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
                     regex_str(&regex)
                 )
@@ -408,7 +408,7 @@ macro_rules! iokit_op {
             }
 
             pub fn any(mut self) -> RuleSet<(), ()> {
-                writeln!(self.inner, "({} {})", A::sbdl(), $sbpl).unwrap();
+                writeln!(self.inner, "({} {})", A::sbpl(), $sbpl).unwrap();
                 RuleSet {
                     inner: self.inner,
                     phantom: PhantomData,
@@ -436,9 +436,9 @@ macro_rules! network_op {
                 writeln!(
                     self.inner,
                     "({} {} (local {} \"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
-                    proto.sbdl(),
+                    proto.sbpl(),
                     address.as_ref().escape()
                 )
                 .unwrap();
@@ -452,9 +452,9 @@ macro_rules! network_op {
                 writeln!(
                     self.inner,
                     "({} {} (remote {} \"{}\"))",
-                    A::sbdl(),
+                    A::sbpl(),
                     $sbpl,
-                    proto.sbdl(),
+                    proto.sbpl(),
                     address.as_ref().escape()
                 )
                 .unwrap();
@@ -465,7 +465,7 @@ macro_rules! network_op {
             }
 
             pub fn any(mut self) -> RuleSet<(), ()> {
-                writeln!(self.inner, "({} {})", A::sbdl(), $sbpl).unwrap();
+                writeln!(self.inner, "({} {})", A::sbpl(), $sbpl).unwrap();
                 RuleSet {
                     inner: self.inner,
                     phantom: PhantomData,
@@ -490,7 +490,7 @@ macro_rules! signal_op {
 
         impl<A: Action> RuleSet<A, $marker> {
             pub fn self_target(mut self) -> RuleSet<(), ()> {
-                writeln!(self.inner, "({} {} (target self))", A::sbdl(), $sbpl).unwrap();
+                writeln!(self.inner, "({} {} (target self))", A::sbpl(), $sbpl).unwrap();
                 RuleSet {
                     inner: self.inner,
                     phantom: PhantomData,
@@ -498,7 +498,7 @@ macro_rules! signal_op {
             }
 
             pub fn others(mut self) -> RuleSet<(), ()> {
-                writeln!(self.inner, "({} {} (target others))", A::sbdl(), $sbpl).unwrap();
+                writeln!(self.inner, "({} {} (target others))", A::sbpl(), $sbpl).unwrap();
                 RuleSet {
                     inner: self.inner,
                     phantom: PhantomData,
@@ -506,7 +506,7 @@ macro_rules! signal_op {
             }
 
             pub fn any(mut self) -> RuleSet<(), ()> {
-                writeln!(self.inner, "({} {})", A::sbdl(), $sbpl).unwrap();
+                writeln!(self.inner, "({} {})", A::sbpl(), $sbpl).unwrap();
                 RuleSet {
                     inner: self.inner,
                     phantom: PhantomData,
@@ -520,7 +520,7 @@ macro_rules! bare_op {
     ($method:ident, $sbpl:literal) => {
         impl<A: Action> RuleSet<A, ()> {
             pub fn $method(mut self) -> RuleSet<(), ()> {
-                writeln!(self.inner, "({} {})", A::sbdl(), $sbpl).unwrap();
+                writeln!(self.inner, "({} {})", A::sbpl(), $sbpl).unwrap();
                 RuleSet {
                     inner: self.inner,
                     phantom: PhantomData,
@@ -666,7 +666,7 @@ pub enum Proto {
 }
 
 impl Proto {
-    fn sbdl(&self) -> &'static str {
+    fn sbpl(&self) -> &'static str {
         match self {
             Proto::Ip => "ip",
             Proto::Tcp => "tcp",
