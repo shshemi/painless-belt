@@ -2,6 +2,13 @@
 name = "painless-belt"
 version = "0.1.1"
 edition = "2024"
+description = "Run a command in a macOS sandbox with sensible defaults."
+license = "MIT"
+repository = "https://github.com/shshemi/painless-belt"
+homepage = "https://github.com/shshemi/painless-belt"
+readme = "README.md"
+keywords = ["sandbox", "macos", "security", "cli", "sandbox-exec"]
+categories = ["command-line-utilities"]
 
 [[bin]]
 name = "pb"
