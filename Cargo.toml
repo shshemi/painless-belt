@@ -1,6 +1,6 @@
 [package]
 name = "painless-belt"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 description = "Run a command in a macOS sandbox with sensible defaults."
 license = "MIT"
