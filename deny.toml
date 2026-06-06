@@ -39,6 +39,7 @@ allow = [
 ]
 confidence-threshold = 0.8
 exceptions = []
+unused-allowed-license = "allow"
 
 [licenses.private]
 ignore = false
