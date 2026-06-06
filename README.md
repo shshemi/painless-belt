@@ -4,11 +4,19 @@ Painless Belt (`pb`) is a lightweight CLI that wraps macOS's Seatbelt API to run
 
 ## Install
 
+Download the latest release and shell completions into `~/.local`:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/shshemi/painless-belt/master/install.sh | bash
+```
+
+Or build from source via Cargo:
+
 ```sh
 cargo install painless-belt
 ```
 
-That gives you a binary called `pb`.
+Either route gives you a binary called `pb`.
 
 ## Quick start
 
