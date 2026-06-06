@@ -414,13 +414,7 @@ impl SystemRuleArgs {
         let want_libs = self.allow_system_binaries || self.allow_system_libraries;
         if want_libs {
             rs = rs.allow().file_read().literal("/");
-            for dir in [
-                "/usr/lib",
-                "/usr/share",
-                "/System",
-                "/Library",
-                "/opt",
-            ] {
+            for dir in ["/usr/lib", "/usr/share", "/System", "/Library", "/opt"] {
                 rs = rs.allow().file_read().subpath(dir);
             }
             rs = rs.allow().file_map_executable().any();
@@ -606,7 +600,7 @@ mod tests {
         let home = dirs::home_dir().unwrap();
         let kc = home.join("Library/Keychains").display().to_string();
         assert_eq!(
-            rs.to_sbdl(),
+            rs.to_sbpl(),
             format!(
                 "(allow file-read* (subpath \"{kc}\"))\n\
                  (allow file-write* (subpath \"{kc}\"))\n"
@@ -622,7 +616,7 @@ mod tests {
         };
         let rs = args.apply_to(RuleSet::default());
         assert_eq!(
-            rs.to_sbdl(),
+            rs.to_sbpl(),
             "(allow file-read* (literal \"/\"))\n\
              (allow file-read* (subpath \"/usr/lib\"))\n\
              (allow file-read* (subpath \"/usr/share\"))\n\
@@ -639,7 +633,7 @@ mod tests {
             allow_system_binaries: true,
             ..Default::default()
         };
-        let sbdl = args.apply_to(RuleSet::default()).to_sbdl().to_string();
+        let sbdl = args.apply_to(RuleSet::default()).to_sbpl().to_string();
         assert!(sbdl.contains("(allow file-read* (subpath \"/usr/lib\"))"));
         assert!(sbdl.contains("(allow file-map-executable)"));
         assert!(sbdl.contains("(allow process-exec)"));
@@ -655,7 +649,7 @@ mod tests {
         let rs = args.apply_to(RuleSet::default());
         let home = dirs::home_dir().unwrap().display().to_string();
         assert_eq!(
-            rs.to_sbdl(),
+            rs.to_sbpl(),
             format!(
                 "(allow file-read* (subpath \"{home}\"))\n\
                  (allow file-write* (subpath \"{home}\"))\n"
@@ -683,7 +677,7 @@ mod tests {
         let h = home.display().to_string();
         let kc = home.join("Library/Keychains").display().to_string();
         assert_eq!(
-            rs.to_sbdl(),
+            rs.to_sbpl(),
             format!(
                 "(allow file-read* (subpath \"{h}\"))\n\
                  (deny file-read* (subpath \"{kc}\"))\n"
@@ -701,12 +695,12 @@ mod tests {
         let home = dirs::home_dir().unwrap();
         let kc = home.join("Library/Keychains").display().to_string();
         assert_eq!(
-            rs.to_sbdl(),
+            rs.to_sbpl(),
             format!("(deny file-read* (subpath \"{kc}\"))\n")
         );
     }
 
-    use crate::sandbox::ToSbdl;
+    use crate::sandbox::ToSbpl;
 
     #[test]
     fn file_rules_emit_allow_before_deny() {
@@ -717,7 +711,7 @@ mod tests {
         };
         let rs = args.apply_to(RuleSet::default());
         assert_eq!(
-            rs.to_sbdl(),
+            rs.to_sbpl(),
             "(allow file-read* (subpath \"/tmp\"))\n\
              (deny file-read* (subpath \"/tmp/secret\"))\n"
         );
@@ -730,7 +724,7 @@ mod tests {
             ..Default::default()
         };
         let rs = args.apply_to(RuleSet::default());
-        assert_eq!(rs.to_sbdl(), "(allow file-read*)\n");
+        assert_eq!(rs.to_sbpl(), "(allow file-read*)\n");
     }
 
     #[test]
@@ -741,7 +735,7 @@ mod tests {
         };
         let rs = args.apply_to(RuleSet::default());
         assert_eq!(
-            rs.to_sbdl(),
+            rs.to_sbpl(),
             "(allow network-outbound (remote tcp \"*:443\"))\n"
         );
     }

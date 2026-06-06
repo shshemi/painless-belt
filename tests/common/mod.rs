@@ -1,19 +1,15 @@
 use std::ffi::{CStr, CString, c_char};
 use std::ptr;
 
-use painless_belt::sandbox::ToSbdl;
+use painless_belt::sandbox::ToSbpl;
 
-type SandboxCompile = unsafe extern "C" fn(
-    *const c_char,
-    *const *const c_char,
-    *mut *mut c_char,
-) -> *mut c_char;
+type SandboxCompile =
+    unsafe extern "C" fn(*const c_char, *const *const c_char, *mut *mut c_char) -> *mut c_char;
 
 type SandboxFreeError = unsafe extern "C" fn(*mut c_char);
 
 fn sandbox_compile(profile: &str) -> Result<(), String> {
-    let handle =
-        unsafe { libc::dlopen(c"/usr/lib/libsandbox.1.dylib".as_ptr(), libc::RTLD_LAZY) };
+    let handle = unsafe { libc::dlopen(c"/usr/lib/libsandbox.1.dylib".as_ptr(), libc::RTLD_LAZY) };
     if handle.is_null() {
         return Err("libsandbox not loadable".into());
     }
@@ -50,8 +46,8 @@ fn sandbox_compile(profile: &str) -> Result<(), String> {
     Err(msg)
 }
 
-pub fn assert_rules_compile(rules: &impl ToSbdl) {
-    let body = format!("(version 1)\n(allow default)\n{}", rules.to_sbdl());
+pub fn assert_rules_compile(rules: &impl ToSbpl) {
+    let body = format!("(version 1)\n(allow default)\n{}", rules.to_sbpl());
     if let Err(e) = sandbox_compile(&body) {
         panic!("sandbox_compile failed: {e}\nRendered SBPL:\n{body}");
     }

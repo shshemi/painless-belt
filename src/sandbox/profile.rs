@@ -1,7 +1,7 @@
 use crate::{
     AppResult,
     dir::profile_path,
-    sandbox::{ToSbdl, template::render},
+    sandbox::{ToSbpl, template::render},
 };
 
 #[derive(Debug)]
@@ -34,9 +34,9 @@ impl Profile {
         }
     }
 
-    pub fn with(mut self, rules: &impl ToSbdl) -> Self {
+    pub fn with(mut self, rules: &impl ToSbpl) -> Self {
         self.inner.push('\n');
-        self.inner.push_str(rules.to_sbdl());
+        self.inner.push_str(rules.to_sbpl());
         self
     }
 

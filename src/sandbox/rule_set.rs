@@ -3,7 +3,7 @@ use std::{fmt::Write, marker::PhantomData, path::Path};
 use regex::Regex;
 
 use crate::misc::ext::str_ext::StrExt;
-use crate::sandbox::ToSbdl;
+use crate::sandbox::ToSbpl;
 
 #[derive(Debug, Default)]
 pub struct RuleSet<A = (), O = ()> {
@@ -27,8 +27,8 @@ impl RuleSet<(), ()> {
     }
 }
 
-impl ToSbdl for RuleSet<(), ()> {
-    fn to_sbdl(&self) -> &str {
+impl ToSbpl for RuleSet<(), ()> {
+    fn to_sbpl(&self) -> &str {
         &self.inner
     }
 }
@@ -686,7 +686,7 @@ mod tests {
     #[test]
     fn allow_file_read_subpath() {
         assert_eq!(
-            rs().allow().file_read().subpath("/").to_sbdl(),
+            rs().allow().file_read().subpath("/").to_sbpl(),
             "(allow file-read* (subpath \"/\"))\n"
         );
     }
@@ -694,7 +694,7 @@ mod tests {
     #[test]
     fn deny_file_write_prefix() {
         assert_eq!(
-            rs().deny().file_write().prefix("/etc/").to_sbdl(),
+            rs().deny().file_write().prefix("/etc/").to_sbpl(),
             "(deny file-write* (prefix \"/etc/\"))\n"
         );
     }
@@ -705,7 +705,7 @@ mod tests {
             rs().allow()
                 .file_read()
                 .literal(r#"/odd"path\here"#)
-                .to_sbdl(),
+                .to_sbpl(),
             "(allow file-read* (literal \"/odd\\\"path\\\\here\"))\n"
         );
     }
@@ -714,7 +714,7 @@ mod tests {
     fn file_search_regex() {
         let re = Regex::new(r"^/tmp/[0-9]+$").unwrap();
         assert_eq!(
-            rs().allow().file_search().regex(re).to_sbdl(),
+            rs().allow().file_search().regex(re).to_sbpl(),
             "(allow file-search (regex #\"^/tmp/[0-9]+$\"))\n"
         );
     }
@@ -725,7 +725,7 @@ mod tests {
             rs().allow()
                 .mach_lookup()
                 .global_name("com.apple.example")
-                .to_sbdl(),
+                .to_sbpl(),
             "(allow mach-lookup (global-name \"com.apple.example\"))\n"
         );
     }
@@ -734,7 +734,7 @@ mod tests {
     fn mach_register_local_name_regex() {
         let re = Regex::new("^foo$").unwrap();
         assert_eq!(
-            rs().deny().mach_register().local_name_regex(re).to_sbdl(),
+            rs().deny().mach_register().local_name_regex(re).to_sbpl(),
             "(deny mach-register (local-name-regex #\"^foo$\"))\n"
         );
     }
@@ -742,7 +742,7 @@ mod tests {
     #[test]
     fn mach_bare_bootstrap() {
         assert_eq!(
-            rs().allow().mach_bootstrap().to_sbdl(),
+            rs().allow().mach_bootstrap().to_sbpl(),
             "(allow mach-bootstrap)\n"
         );
     }
@@ -750,7 +750,7 @@ mod tests {
     #[test]
     fn ipc_posix_sem_name() {
         assert_eq!(
-            rs().allow().ipc_posix_sem().name("mysem").to_sbdl(),
+            rs().allow().ipc_posix_sem().name("mysem").to_sbpl(),
             "(allow ipc-posix-sem* (ipc-posix-name \"mysem\"))\n"
         );
     }
@@ -759,7 +759,7 @@ mod tests {
     fn ipc_posix_shm_regex() {
         let re = Regex::new("^/com\\.app\\.").unwrap();
         assert_eq!(
-            rs().allow().ipc_posix_shm().regex(re).to_sbdl(),
+            rs().allow().ipc_posix_shm().regex(re).to_sbpl(),
             "(allow ipc-posix-shm* (ipc-posix-name-regex #\"^/com\\.app\\.\"))\n"
         );
     }
@@ -767,7 +767,7 @@ mod tests {
     #[test]
     fn sysctl_read_name() {
         assert_eq!(
-            rs().allow().sysctl_read().name("kern.ostype").to_sbdl(),
+            rs().allow().sysctl_read().name("kern.ostype").to_sbpl(),
             "(allow sysctl-read (sysctl-name \"kern.ostype\"))\n"
         );
     }
@@ -778,7 +778,7 @@ mod tests {
             rs().allow()
                 .iokit_open()
                 .user_client_class("IOSurfaceRootUserClient")
-                .to_sbdl(),
+                .to_sbpl(),
             "(allow iokit-open (iokit-user-client-class \"IOSurfaceRootUserClient\"))\n"
         );
     }
@@ -790,7 +790,7 @@ mod tests {
             rs().allow()
                 .iokit_set_properties()
                 .property_regex(re)
-                .to_sbdl(),
+                .to_sbpl(),
             "(allow iokit-set-properties (iokit-property-regex #\"^Built\"))\n"
         );
     }
@@ -801,7 +801,7 @@ mod tests {
             rs().allow()
                 .network_outbound()
                 .remote(Proto::Tcp, "*:443")
-                .to_sbdl(),
+                .to_sbpl(),
             "(allow network-outbound (remote tcp \"*:443\"))\n"
         );
     }
@@ -809,7 +809,7 @@ mod tests {
     #[test]
     fn network_outbound_any() {
         assert_eq!(
-            rs().allow().network_outbound().any().to_sbdl(),
+            rs().allow().network_outbound().any().to_sbpl(),
             "(allow network-outbound)\n"
         );
     }
@@ -820,7 +820,7 @@ mod tests {
             rs().deny()
                 .network_inbound()
                 .local(Proto::Udp, "localhost:5353")
-                .to_sbdl(),
+                .to_sbpl(),
             "(deny network-inbound (local udp \"localhost:5353\"))\n"
         );
     }
@@ -828,7 +828,7 @@ mod tests {
     #[test]
     fn signal_self_target() {
         assert_eq!(
-            rs().allow().signal().self_target().to_sbdl(),
+            rs().allow().signal().self_target().to_sbpl(),
             "(allow signal (target self))\n"
         );
     }
@@ -836,7 +836,7 @@ mod tests {
     #[test]
     fn signal_others() {
         assert_eq!(
-            rs().deny().signal().others().to_sbdl(),
+            rs().deny().signal().others().to_sbpl(),
             "(deny signal (target others))\n"
         );
     }
@@ -844,7 +844,7 @@ mod tests {
     #[test]
     fn file_any() {
         assert_eq!(
-            rs().allow().file_read().any().to_sbdl(),
+            rs().allow().file_read().any().to_sbpl(),
             "(allow file-read*)\n"
         );
     }
@@ -852,7 +852,7 @@ mod tests {
     #[test]
     fn mach_any() {
         assert_eq!(
-            rs().allow().mach_lookup().any().to_sbdl(),
+            rs().allow().mach_lookup().any().to_sbpl(),
             "(allow mach-lookup)\n"
         );
     }
@@ -860,7 +860,7 @@ mod tests {
     #[test]
     fn ipc_any() {
         assert_eq!(
-            rs().allow().ipc_posix_shm().any().to_sbdl(),
+            rs().allow().ipc_posix_shm().any().to_sbpl(),
             "(allow ipc-posix-shm*)\n"
         );
     }
@@ -868,7 +868,7 @@ mod tests {
     #[test]
     fn sysctl_any() {
         assert_eq!(
-            rs().allow().sysctl_read().any().to_sbdl(),
+            rs().allow().sysctl_read().any().to_sbpl(),
             "(allow sysctl-read)\n"
         );
     }
@@ -876,14 +876,14 @@ mod tests {
     #[test]
     fn iokit_any() {
         assert_eq!(
-            rs().allow().iokit_open().any().to_sbdl(),
+            rs().allow().iokit_open().any().to_sbpl(),
             "(allow iokit-open)\n"
         );
     }
 
     #[test]
     fn signal_any() {
-        assert_eq!(rs().allow().signal().any().to_sbdl(), "(allow signal)\n");
+        assert_eq!(rs().allow().signal().any().to_sbpl(), "(allow signal)\n");
     }
 
     #[test]
@@ -897,7 +897,7 @@ mod tests {
                 .subpath("/etc")
                 .allow()
                 .mach_bootstrap()
-                .to_sbdl(),
+                .to_sbpl(),
             "(allow file-read* (subpath \"/\"))\n\
              (deny file-write* (subpath \"/etc\"))\n\
              (allow mach-bootstrap)\n"
