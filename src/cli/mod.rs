@@ -3,6 +3,7 @@ pub mod rule_args;
 use std::{ffi::OsString, sync::OnceLock};
 
 use clap::{Args, Parser, Subcommand};
+use clap_complete::Shell;
 
 use rule_args::RuleArgs;
 
@@ -13,6 +14,10 @@ use rule_args::RuleArgs;
     args_conflicts_with_subcommands = true
 )]
 pub struct Cli {
+    /// Print a shell-completion script to stdout and exit.
+    #[arg(long, value_name = "SHELL")]
+    pub generate_completion: Option<Shell>,
+
     #[command(subcommand)]
     pub subcommand: Option<SubCmd>,
 

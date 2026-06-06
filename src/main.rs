@@ -2,6 +2,7 @@ use std::{ffi::OsString, os::unix::process::CommandExt, process::Command};
 
 use anyhow::anyhow;
 use clap::CommandFactory;
+use clap_complete::generate;
 use painless_belt::{
     AppResult,
     cli::{Cli, RunArgs, cli},
@@ -16,6 +17,13 @@ fn main() -> AppResult<()> {
         return Ok(());
     }
     let cli = cli();
+
+    if let Some(shell) = cli.generate_completion {
+        let mut cmd = Cli::command();
+        generate(shell, &mut cmd, "pb", &mut std::io::stdout());
+        return Ok(());
+    }
+
     match &cli.subcommand.as_ref().unwrap() {
         painless_belt::cli::SubCmd::Run(args) => run(args)?,
         painless_belt::cli::SubCmd::Pull(args) => {
