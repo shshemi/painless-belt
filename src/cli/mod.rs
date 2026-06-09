@@ -48,6 +48,8 @@ pub enum SubCmd {
     Edit(EditArgs),
     /// Remove a previously-pulled template.
     Rm(RemoveArgs),
+    /// List all downloaded profiles (including default and empty).
+    Ls,
 }
 
 impl Default for SubCmd {

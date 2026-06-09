@@ -47,6 +47,11 @@ fn main() -> AppResult<()> {
                 .unwrap_or_else(|_| "vi".to_string());
             Command::new(&editor).arg(&path).status()?;
         }
+        painless_belt::cli::SubCmd::Ls => {
+            for name in dir::list_profiles()? {
+                println!("{name}");
+            }
+        }
     }
 
     Ok(())

@@ -35,6 +35,25 @@ pub fn remove_profile(name: &str) -> AppResult<PathBuf> {
     Ok(path)
 }
 
+pub fn list_profiles() -> AppResult<Vec<String>> {
+    let mut names: Vec<String> = fs::read_dir(profile_dir()?)?
+        .filter_map(Result::ok)
+        .map(|entry| entry.path())
+        .filter(|path| path.extension().is_some_and(|ext| ext == "pb"))
+        .filter_map(|path| {
+            path.file_stem()
+                .map(|stem| stem.to_string_lossy().into_owned())
+        })
+        .collect();
+    for builtin in ["default", "empty"] {
+        if !names.iter().any(|name| name == builtin) {
+            names.push(builtin.to_owned());
+        }
+    }
+    names.sort();
+    Ok(names)
+}
+
 pub fn copy_profile(name: &str, dst: &str) -> AppResult<()> {
     let src = profile_path(name)?;
     let dst = profile_path(dst)?;
