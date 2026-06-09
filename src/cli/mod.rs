@@ -47,7 +47,7 @@ pub enum SubCmd {
     /// Open a profile in $EDITOR.
     Edit(EditArgs),
     /// Remove a previously-pulled template.
-    Remove(RemoveArgs),
+    Rm(RemoveArgs),
 }
 
 impl Default for SubCmd {

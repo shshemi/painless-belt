@@ -36,7 +36,7 @@ fn main() -> AppResult<()> {
             }
             println!("Cloned {}", &args.dst);
         }
-        painless_belt::cli::SubCmd::Remove(args) => {
+        painless_belt::cli::SubCmd::Rm(args) => {
             let p = dir::remove_profile(&args.name)?;
             println!("Removed {}", p.display());
         }
