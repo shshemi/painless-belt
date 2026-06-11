@@ -45,3 +45,5 @@
 (allow file-write* (prefix "{{ home }}/.claude.json"))
 (allow file-write* (subpath "{{ home }}/.local/state/claude"))
 (allow file-write* (subpath "{{ home }}/.cache/claude"))
+(allow file-write* (subpath "{{ home }}/.local/share/claude"))
+(allow file-write* (literal "{{ home }}/.local/bin/claude"))
