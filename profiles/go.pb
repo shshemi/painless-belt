@@ -34,4 +34,5 @@
 (allow file-read* (subpath "{{ home }}/.config/git"))
 (allow file-read* (subpath "{{ home }}/go"))
 (allow file-write* (subpath "{{ home }}/go"))
-(allow file-write* (subpath "{{ home }}/Library/Caches"))
+(allow file-read* (subpath "{{ home }}/Library/Application Support/go"))
+(allow file-write* (subpath "{{ home }}/Library/Application Support/go"))
