@@ -32,4 +32,8 @@
 {% endfor %}
 (allow file-read* (literal "{{ home }}/.gitconfig"))
 (allow file-read* (subpath "{{ home }}/.config/git"))
-(allow file-write* (subpath "{{ home }}/Library/Caches"))
+(allow file-read* (literal "{{ home }}/.npmrc"))
+(allow file-read* (subpath "{{ home }}/.npm"))
+(allow file-write* (subpath "{{ home }}/.npm"))
+(allow file-read* (literal "{{ home }}/.node_repl_history"))
+(allow file-write* (literal "{{ home }}/.node_repl_history"))
