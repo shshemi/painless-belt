@@ -32,7 +32,6 @@
 {% endfor %}
 (allow file-read* (literal "{{ home }}/.gitconfig"))
 (allow file-read* (subpath "{{ home }}/.config/git"))
-(allow file-write* (subpath "{{ home }}/Library/Caches"))
 (allow file-read* (subpath "{{ home }}/.claude"))
 (allow file-read* (prefix "{{ home }}/.claude.json"))
 (allow file-read* (subpath "{{ home }}/.local/share/claude"))
