@@ -16,8 +16,8 @@ impl Config {
         Ok(toml::from_str(&content)?)
     }
 
-    pub fn profile_name(&self, command: &str) -> Option<&str> {
-        self.profile_map.get(command).map(String::as_str)
+    pub fn profile_name(&self, command: impl AsRef<str>) -> Option<&str> {
+        self.profile_map.get(command.as_ref()).map(String::as_str)
     }
 }
 

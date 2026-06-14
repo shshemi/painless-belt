@@ -65,7 +65,7 @@ fn run(args: &RunArgs) -> AppResult<()> {
         }
         merged
     } else if let Some(cmd) = args.command.first()
-        && let Some(name) = config().profile_name(&cmd.as_os_str().to_string_lossy())
+        && let Some(name) = config().profile_name(cmd.as_os_str().to_string_lossy())
     {
         Profile::load(name)?
     } else {
