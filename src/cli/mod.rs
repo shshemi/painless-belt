@@ -60,9 +60,10 @@ impl Default for SubCmd {
 
 #[derive(Args, Debug, Default)]
 pub struct RunArgs {
-    /// Sanbox profile name.
-    #[arg(short, long)]
-    pub profile: Option<String>,
+    /// Sandbox profile name(s). Pass more than one to run against their
+    /// union, e.g. `-p base python`.
+    #[arg(short, long, value_name = "PROFILE", num_args = 1..)]
+    pub profile: Vec<String>,
 
     #[command(flatten)]
     pub rules: RuleArgs,

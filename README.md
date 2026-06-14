@@ -98,6 +98,18 @@ Two profiles come built-in:
 - `default` — the sensible everyday profile (used when you don't pass `-p`)
 - `empty` — a deny-everything baseline to build on
 
+### Combining profiles
+
+Pass several profiles to a single `-p` to run against their union. The
+sandbox allows whatever **any** of the listed profiles allows; rules from
+later profiles are layered on top, so they win on conflicts:
+
+```sh
+pb -p python node -- ./build.js   # allow what python OR node needs
+```
+
+Any extra `--allow-*` / `--deny-*` flags still apply on top of the combined set.
+
 ### Pulling profiles
 
 A handful of curated profiles live in the [project repo](https://github.com/shshemi/painless-belt/tree/master/profiles).
