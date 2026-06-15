@@ -50,25 +50,9 @@ impl Profile {
         }
     }
 
-    /// Merge another profile's rules into this one, so the result allows
-    /// whatever either profile allows. This profile's header is kept and
-    /// `other`'s rules are appended, dropping `other`'s `(version ...)` and
-    /// `(... default)` lines: re-declaring the catch-all default below
-    /// existing rules would void them under SBPL's last-match-wins
-    /// evaluation. `other`'s rules land last, so they win on conflicts.
     pub fn merge(mut self, other: &Self) -> Self {
-        for line in other.inner.lines() {
-            let trimmed = line.trim();
-            if trimmed.is_empty()
-                || trimmed.starts_with("(version")
-                || trimmed == "(deny default)"
-                || trimmed == "(allow default)"
-            {
-                continue;
-            }
-            self.inner.push('\n');
-            self.inner.push_str(line);
-        }
+        self.inner.push('\n');
+        self.inner.push_str(&other.inner);
         self
     }
 }
