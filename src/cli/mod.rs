@@ -60,10 +60,15 @@ impl Default for SubCmd {
 
 #[derive(Args, Debug, Default)]
 pub struct RunArgs {
-    /// Sandbox profile name(s). Pass more than one to run against their
-    /// union, e.g. `-p base python`.
-    #[arg(short, long, value_name = "PROFILE", num_args = 1..)]
-    pub profile: Vec<String>,
+    /// Base sandbox profile name (defaults to the command's mapped profile,
+    /// else `default`).
+    #[arg(short, long, value_name = "PROFILE")]
+    pub profile: Option<String>,
+
+    /// Extra profiles layered on top of the base; their rules are merged in.
+    /// Repeatable, e.g. `-a cargo -a node`.
+    #[arg(short, long, value_name = "PROFILE")]
+    pub addon_profiles: Vec<String>,
 
     #[command(flatten)]
     pub rules: RuleArgs,

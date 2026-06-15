@@ -58,12 +58,8 @@ fn main() -> AppResult<()> {
 }
 
 fn run(args: &RunArgs) -> AppResult<()> {
-    let mut profile = if let Some((first, rest)) = args.profile.split_first() {
-        let mut merged = Profile::load(first)?;
-        for name in rest {
-            merged = merged.merge(&Profile::load(name)?);
-        }
-        merged
+    let mut profile = if let Some(name) = args.profile.as_ref() {
+        Profile::load(name)?
     } else if let Some(cmd) = args.command.first()
         && let Some(name) = config().profile_name(cmd.as_os_str().to_string_lossy())
     {
@@ -71,6 +67,9 @@ fn run(args: &RunArgs) -> AppResult<()> {
     } else {
         Profile::default()
     };
+    for name in args.addon_profiles.iter() {
+        profile = profile.merge(&Profile::load(name)?);
+    }
     profile = profile.with(&args.rules.rule_set());
     profile.init()?;
     exec(&args.command)?;

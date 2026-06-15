@@ -98,17 +98,21 @@ Two profiles come built-in:
 - `default` — the sensible everyday profile (used when you don't pass `-p`)
 - `empty` — a deny-everything baseline to build on
 
-### Combining profiles
+### Layering profiles
 
-Pass several profiles to a single `-p` to run against their union. The
-sandbox allows whatever **any** of the listed profiles allows; rules from
-later profiles are layered on top, so they win on conflicts:
+Start from one base profile (`-p`) and layer extra profiles on top with
+`-a` / `--addon-profiles` (repeatable). Each addon's rules are merged in after
+the base, so the sandbox allows what the base **or** any addon allows, and
+addons win on conflicts:
 
 ```sh
-pb -p python node -- ./build.js   # allow what python OR node needs
+pb -p python -a cargo -- cargo build   # python base + cargo's ~/.cargo & ~/.rustup
+pb -a cargo -- cargo build             # default base + cargo addon
 ```
 
-Any extra `--allow-*` / `--deny-*` flags still apply on top of the combined set.
+Addons are handy as small, focused fragments (e.g. `cargo` just grants the
+Rust toolchain dirs). Any extra `--allow-*` / `--deny-*` flags still apply on
+top of the combined set.
 
 ### Pulling profiles
 
