@@ -254,9 +254,15 @@ init_any!(
     ipc_posix_shm_read_metadata
 );
 init_any!(init_ipc_posix_shm_write_any, ipc_posix_shm_write);
-init_any!(init_ipc_posix_shm_write_create_any, ipc_posix_shm_write_create);
+init_any!(
+    init_ipc_posix_shm_write_create_any,
+    ipc_posix_shm_write_create
+);
 init_any!(init_ipc_posix_shm_write_data_any, ipc_posix_shm_write_data);
-init_any!(init_ipc_posix_shm_write_unlink_any, ipc_posix_shm_write_unlink);
+init_any!(
+    init_ipc_posix_shm_write_unlink_any,
+    ipc_posix_shm_write_unlink
+);
 
 init_any!(init_sysctl_read_any, sysctl_read);
 init_any!(init_sysctl_write_any, sysctl_write);
