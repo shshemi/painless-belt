@@ -40,13 +40,6 @@ impl Profile {
         self
     }
 
-    pub fn push_rules(&mut self, rules: &str) {
-        if !rules.is_empty() {
-            self.inner.push('\n');
-            self.inner.push_str(rules);
-        }
-    }
-
     pub fn init(&self) -> AppResult<()> {
         crate::ffi::sandbox_init(&self.inner, 0)
     }
@@ -119,8 +112,9 @@ mod tests {
 
     #[test]
     fn merge_drops_only_the_others_version_and_default() {
-        let merged = profile("(version 1)\n(deny default)\n(allow signal)")
-            .merge(&profile("(version 1)\n(allow default)\n(allow process-fork)"));
+        let merged = profile("(version 1)\n(deny default)\n(allow signal)").merge(&profile(
+            "(version 1)\n(allow default)\n(allow process-fork)",
+        ));
         let sbpl = merged.as_ref();
         // Only the base's header survives; the other's is stripped.
         assert_eq!(sbpl.matches("(version 1)").count(), 1);
