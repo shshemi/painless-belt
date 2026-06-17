@@ -30,8 +30,13 @@
 {% for dir in path %}
 (allow file-read* (subpath "{{ dir }}"))
 {% endfor %}
-(allow file-read* (subpath "{{ home }}/.config/pip"))
-(allow file-read* (subpath "{{ home }}/.pyenv"))
-(allow file-read* (subpath "{{ home }}/.local/lib"))
-(allow file-read* (literal "{{ home }}/.python_history"))
-(allow file-write* (literal "{{ home }}/.python_history"))
+(allow file-read* (literal "{{ home }}/.gitconfig"))
+(allow file-write* (literal "{{ home }}/.gitconfig"))
+(allow file-read* (subpath "{{ home }}/.config/git"))
+(allow file-write* (subpath "{{ home }}/.config/git"))
+(allow file-read* (literal "{{ home }}/.git-credentials"))
+(allow file-write* (literal "{{ home }}/.git-credentials"))
+(allow file-read* (subpath "{{ home }}/.ssh"))
+(allow file-write* (literal "{{ home }}/.ssh/known_hosts"))
+(allow file-read* (subpath "{{ home }}/Library/Keychains"))
+(allow file-write* (subpath "{{ home }}/Library/Keychains"))
