@@ -66,8 +66,12 @@ impl Profile {
     }
 
     pub fn merge(mut self, other: &Self) -> Self {
-        self.inner.push('\n');
-        self.inner.push_str(&other.inner);
+        for line in other.inner.lines() {
+            if !self.inner.lines().any(|l| l == line) {
+                self.inner.push('\n');
+                self.inner.push_str(line);
+            }
+        }
         self
     }
 }
