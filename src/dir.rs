@@ -5,7 +5,8 @@ use anyhow::anyhow;
 use crate::AppResult;
 
 pub fn home_dir() -> AppResult<PathBuf> {
-    let home = dirs::home_dir().ok_or(anyhow!("Home directory not found"))?;
+    let home = dirs::home_dir()
+        .ok_or_else(|| anyhow!("Could not determine your home directory (is $HOME set?)"))?;
     let dir = home.join(".painless-belt");
     mkdir(dir)
 }
@@ -29,7 +30,7 @@ pub fn profile_path(name: &str) -> AppResult<PathBuf> {
 pub fn remove_profile(name: &str) -> AppResult<PathBuf> {
     let path = profile_path(name)?;
     if !path.is_file() {
-        return Err(anyhow!("Profile not found: {name}"));
+        return Err(anyhow!("Profile '{name}' not found at {}", path.display()));
     }
     fs::remove_file(&path)?;
     Ok(path)

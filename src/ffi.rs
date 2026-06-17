@@ -8,11 +8,11 @@ use crate::AppResult;
 
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 pub enum Error {
-    #[error("sandbox_init failed: {0}")]
+    #[error("Failed to initialize the sandbox: {0}")]
     Sandbox(String),
-    #[error("profile contained an interior NUL byte")]
+    #[error("The sandbox profile contained an interior NUL byte")]
     InvalidProfile,
-    #[error("parameter {0:?} contained an interior NUL byte")]
+    #[error("Parameter {0:?} contained an interior NUL byte")]
     InvalidParameter(String),
 }
 

@@ -31,14 +31,14 @@ impl FromStr for NetSpec {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let (proto, addr) = s
             .split_once(':')
-            .ok_or_else(|| NetSpecError("expected <proto>:<address>".into()))?;
+            .ok_or_else(|| NetSpecError("Expected <proto>:<address>".into()))?;
         let proto = match proto {
             "ip" => Proto::Ip,
             "tcp" => Proto::Tcp,
             "udp" => Proto::Udp,
             other => {
                 return Err(NetSpecError(format!(
-                    "unknown proto '{other}' (ip|tcp|udp)"
+                    "Unknown proto '{other}' (ip|tcp|udp)"
                 )));
             }
         };

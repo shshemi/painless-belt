@@ -28,17 +28,17 @@ fn main() -> AppResult<()> {
         painless_belt::cli::SubCmd::Run(args) => run(args)?,
         painless_belt::cli::SubCmd::Pull(args) => {
             let p = http::pull_profile(&args.name, &args.name)?;
-            println!("Pulled  {}", p.display());
+            println!("Profile {} was pulled into {}", args.name, p.display());
         }
         painless_belt::cli::SubCmd::Clone(args) => {
             if dir::copy_profile(&args.src, &args.dst).is_err() {
                 http::pull_profile(&args.src, &args.dst)?;
             }
-            println!("Cloned {}", &args.dst);
+            println!("Profile {} was cloned into {}", &args.src, &args.dst);
         }
         painless_belt::cli::SubCmd::Rm(args) => {
             let p = dir::remove_profile(&args.name)?;
-            println!("Removed {}", p.display());
+            println!("Profile {} was removed from {}", &args.name, p.display());
         }
         painless_belt::cli::SubCmd::Edit(args) => {
             let path = dir::profile_path(&args.name)?;
@@ -77,10 +77,15 @@ fn run(args: &RunArgs) -> AppResult<()> {
 }
 
 fn exec(cmd: &[OsString]) -> AppResult<()> {
-    let (program, args) = cmd.split_first().ok_or(anyhow!("Command not found"))?;
-    Err(Command::new(program)
+    let (program, args) = cmd
+        .split_first()
+        .ok_or_else(|| anyhow!("No command to run. Pass one after `--`, e.g. `pb -- ls`."))?;
+    let err = Command::new(program)
         .args(args)
         .envs(std::env::vars_os())
-        .exec())?;
-    Ok(())
+        .exec();
+    Err(anyhow!(
+        "Failed to execute '{}': {err}",
+        program.to_string_lossy()
+    ))
 }

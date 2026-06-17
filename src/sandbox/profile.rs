@@ -1,3 +1,5 @@
+use anyhow::anyhow;
+
 use crate::{
     AppResult,
     dir::profile_path,
@@ -7,6 +9,20 @@ use crate::{
 #[derive(Debug)]
 pub struct Profile {
     inner: String,
+}
+
+fn profile_to_string(name: &str) -> AppResult<String> {
+    let path = profile_path(name)?;
+    std::fs::read_to_string(&path).map_err(|e| {
+        if e.kind() == std::io::ErrorKind::NotFound {
+            anyhow!(
+                "Profile '{name}' not found at {}. Run `pb ls` to list profiles or `pb pull {name}` to fetch it.",
+                path.display()
+            )
+        } else {
+            anyhow!("Failed to read profile '{name}' at {}: {e}", path.display())
+        }
+    })
 }
 
 impl Profile {
@@ -23,8 +39,7 @@ impl Profile {
     }
 
     pub fn load(name: &str) -> AppResult<Self> {
-        let profile = profile_path(name)
-            .and_then(|p| Ok(std::fs::read_to_string(p)?))
+        let profile = profile_to_string(name)
             .and_then(|s| render(&s))
             .map(|profile| Self { inner: profile });
         match name {
