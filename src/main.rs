@@ -71,6 +71,9 @@ fn run(args: &RunArgs) -> AppResult<()> {
         profile = profile.merge(&Profile::load(name)?);
     }
     profile = profile.with(&args.rules.rule_set());
+    if args.print_profile {
+        println!("{}", profile.as_ref());
+    }
     profile.init()?;
     exec(&args.command)?;
     Ok(())

@@ -73,6 +73,10 @@ pub struct RunArgs {
     #[command(flatten)]
     pub rules: RuleArgs,
 
+    /// Print the final, compiled sandbox profile to stdout before running.
+    #[arg(long)]
+    pub print_profile: bool,
+
     /// Command and args to run inside the sandbox (after `--`).
     #[arg(last = true)]
     pub command: Vec<OsString>,
