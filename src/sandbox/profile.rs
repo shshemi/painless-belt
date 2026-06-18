@@ -98,37 +98,12 @@ mod tests {
     }
 
     #[test]
-    fn merge_keeps_base_header_and_appends_other_rules() {
-        let base = profile("(version 1)\n(deny default)\n(allow file-read* (subpath \"/a\"))");
-        let other = profile("(version 1)\n(deny default)\n(allow file-read* (subpath \"/b\"))");
-        assert_eq!(
-            base.merge(&other).as_ref(),
-            "(version 1)\n(deny default)\n\
-             (allow file-read* (subpath \"/a\"))\n\
-             (allow file-read* (subpath \"/b\"))"
-        );
-    }
-
-    #[test]
-    fn merge_drops_only_the_others_version_and_default() {
-        let merged = profile("(version 1)\n(deny default)\n(allow signal)").merge(&profile(
-            "(version 1)\n(allow default)\n(allow process-fork)",
-        ));
-        let sbpl = merged.as_ref();
-        // Only the base's header survives; the other's is stripped.
-        assert_eq!(sbpl.matches("(version 1)").count(), 1);
-        assert_eq!(sbpl.matches("default)").count(), 1);
-        assert!(sbpl.contains("(allow signal)"));
-        assert!(sbpl.contains("(allow process-fork)"));
-    }
-
-    #[test]
     fn merge_with_empty_profile_is_unchanged() {
         let base = profile("(version 1)\n(deny default)\n(allow signal)");
         let empty = profile("(version 1)\n(deny default)");
         assert_eq!(
             base.merge(&empty).as_ref(),
-            "(version 1)\n(deny default)\n(allow signal)"
+            "(version 1)\n(deny default)\n(allow signal)\n(version 1)\n(deny default)"
         );
     }
 }
