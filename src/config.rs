@@ -2,7 +2,7 @@ use std::{collections::HashMap, fs, sync::OnceLock};
 
 use serde::{Deserialize, Serialize};
 
-use crate::{AppResult, dir};
+use crate::{AppResult, fs::config_path};
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Config {
@@ -11,7 +11,7 @@ pub struct Config {
 
 impl Config {
     pub fn load() -> AppResult<Self> {
-        let path = dir::config_path()?;
+        let path = config_path()?;
         let content = fs::read_to_string(path)?;
         Ok(toml::from_str(&content)?)
     }

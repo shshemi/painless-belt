@@ -2,7 +2,7 @@ use anyhow::anyhow;
 
 use crate::{
     AppResult,
-    dir::profile_path,
+    fs::profile_path,
     sandbox::{ToSbpl, template::render},
 };
 

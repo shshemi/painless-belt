@@ -7,7 +7,7 @@ use painless_belt::{
     AppResult,
     cli::{Cli, RunArgs, cli},
     config::config,
-    dir, http,
+    fs, http,
     sandbox::profile::Profile,
 };
 
@@ -31,24 +31,24 @@ fn main() -> AppResult<()> {
             println!("Profile {} was pulled into {}", args.name, p.display());
         }
         painless_belt::cli::SubCmd::Clone(args) => {
-            if dir::copy_profile(&args.src, &args.dst).is_err() {
+            if fs::copy_profile(&args.src, &args.dst).is_err() {
                 http::pull_profile(&args.src, &args.dst)?;
             }
             println!("Profile {} was cloned into {}", &args.src, &args.dst);
         }
         painless_belt::cli::SubCmd::Rm(args) => {
-            let p = dir::remove_profile(&args.name)?;
+            let p = fs::remove_profile(&args.name)?;
             println!("Profile {} was removed from {}", &args.name, p.display());
         }
         painless_belt::cli::SubCmd::Edit(args) => {
-            let path = dir::profile_path(&args.name)?;
+            let path = fs::profile_path(&args.name)?;
             let editor = std::env::var("VISUAL")
                 .or_else(|_| std::env::var("EDITOR"))
                 .unwrap_or_else(|_| "vi".to_string());
             Command::new(&editor).arg(&path).status()?;
         }
         painless_belt::cli::SubCmd::Ls => {
-            for name in dir::profiles()? {
+            for name in fs::profiles()? {
                 println!("{name}");
             }
         }

@@ -2,7 +2,7 @@ use std::{fs, path::PathBuf};
 
 use anyhow::anyhow;
 
-use crate::{AppResult, dir};
+use crate::{AppResult, fs::profile_path};
 
 const PROFILES_URL: &str =
     "https://raw.githubusercontent.com/shshemi/painless-belt/master/profiles";
@@ -26,7 +26,7 @@ pub fn pull_profile(name: &str, dst: &str) -> AppResult<PathBuf> {
         .into_body()
         .read_to_string()
         .map_err(|e| anyhow!("Failed to read the response for profile '{name}' from {url}: {e}"))?;
-    let dest = dir::profile_path(dst)?;
+    let dest = profile_path(dst)?;
     fs::write(&dest, body)
         .map_err(|e| anyhow!("Failed to save profile '{dst}' to {}: {e}", dest.display()))?;
     Ok(dest)
