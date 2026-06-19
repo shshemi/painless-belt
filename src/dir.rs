@@ -36,7 +36,7 @@ pub fn remove_profile(name: &str) -> AppResult<PathBuf> {
     Ok(path)
 }
 
-pub fn list_profiles() -> AppResult<Vec<String>> {
+pub fn profiles() -> AppResult<Vec<String>> {
     let mut names: Vec<String> = fs::read_dir(profile_dir()?)?
         .filter_map(Result::ok)
         .map(|entry| entry.path())

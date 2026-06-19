@@ -48,7 +48,7 @@ fn main() -> AppResult<()> {
             Command::new(&editor).arg(&path).status()?;
         }
         painless_belt::cli::SubCmd::Ls => {
-            for name in dir::list_profiles()? {
+            for name in dir::profiles()? {
                 println!("{name}");
             }
         }
