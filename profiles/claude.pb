@@ -30,8 +30,6 @@
 {% for dir in path %}
 (allow file-read* (subpath "{{ dir }}"))
 {% endfor %}
-(allow file-read* (literal "{{ home }}/.gitconfig"))
-(allow file-read* (subpath "{{ home }}/.config/git"))
 (allow file-read* (subpath "{{ home }}/.claude"))
 (allow file-read* (prefix "{{ home }}/.claude.json"))
 (allow file-read* (subpath "{{ home }}/.local/share/claude"))
