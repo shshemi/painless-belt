@@ -23,7 +23,6 @@
 (allow sysctl-read)
 (allow ipc-posix-shm)
 (allow signal)
-(allow network-outbound)
 (allow process-exec)
 (allow process-fork)
 (allow system-socket)
