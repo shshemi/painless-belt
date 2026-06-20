@@ -116,7 +116,24 @@ top of the combined set.
 
 ### Pulling profiles
 
-A handful of curated profiles live in the [project repo](https://github.com/shshemi/painless-belt/tree/master/profiles).
+Curated profiles for common tools live in the [project repo](https://github.com/shshemi/painless-belt/tree/master/profiles),
+each scoped to only the paths that tool needs:
+
+- **Languages & toolchains:** `python`, `node`, `rust`, `go`, `ruby`, `java`,
+  `deno`, `bun`, `dotnet`, `php`, `uv`, `elixir`, `zig`, `swift`, `haskell`
+- **Cloud / DevOps / deploy:** `aws`, `azure`, `gcloud`, `brew`, `docker`,
+  `kubectl`, `terraform`, `helm`, `ansible`, `pulumi`, `wrangler`, `vercel`,
+  `netlify`, `flyctl`, `supabase`
+- **Databases & data:** `psql`, `mysql`, `redis-cli`, `sqlite3`, `mongosh`,
+  `httpie`, `pandoc`
+- **VCS:** `git`, `gh`, `jj`, `hg`, `lazygit`
+- **Editors:** `vi`, `vim`, `nvim`, `emacs`, `helix`, `nano`, `zed`
+- **AI CLIs:** `claude`, `codex`, `gemini-cli`, `ollama`, `aider`
+
+A profile that wraps `git` (e.g. `jj`, `lazygit`) does not bundle your git
+config — layer it with `-a git` when you need it. Pure stdin→stdout tools like
+`jq`, `yq`, and `ffmpeg` need nothing beyond the `default` profile, so they have
+no dedicated profile.
 
 Pull one to your machine:
 
