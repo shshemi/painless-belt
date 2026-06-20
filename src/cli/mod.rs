@@ -66,8 +66,9 @@ pub struct RunArgs {
     pub profile: Option<String>,
 
     /// Extra profiles layered on top of the base; their rules are merged in.
-    /// Repeatable, e.g. `-a cargo -a node`.
-    #[arg(short, long, value_name = "PROFILE")]
+    /// Repeatable and accepts multiple values, e.g. `-a cargo node` or
+    /// `-a cargo -a node`.
+    #[arg(short, long, value_name = "PROFILE(S)", num_args = 1..)]
     pub addon_profiles: Vec<String>,
 
     #[command(flatten)]
