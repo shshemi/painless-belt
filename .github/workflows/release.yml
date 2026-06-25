@@ -1,5 +1,6 @@
 name: Release
 
+# Manually triggered from the Actions tab ("Run workflow").
 on:
   workflow_dispatch:
     inputs:
