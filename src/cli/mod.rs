@@ -11,7 +11,8 @@ use rule_args::RuleArgs;
 #[command(
     name = "painless-belt",
     about = "Run a command in a macOS sandbox with sensible defaults.",
-    args_conflicts_with_subcommands = true
+    args_conflicts_with_subcommands = true,
+    version
 )]
 pub struct Cli {
     /// Ignore other arguments and print a shell-completion script to stdout.
