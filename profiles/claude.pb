@@ -24,6 +24,8 @@
 (allow ipc-posix-shm)
 (allow signal)
 (allow network-outbound)
+(allow network-bind (local ip "localhost:*"))
+(allow network-inbound (local ip "localhost:*"))
 (allow process-exec)
 (allow process-fork)
 (allow system-socket)
